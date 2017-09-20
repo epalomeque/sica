@@ -27,25 +27,31 @@ class Busquedaform(forms.Form):
 class cedulaforms(ModelForm):
     class Meta:
         model = CEDULA
-        fields = ['origen','fechCierre','asgeneral','asdetalle','DatInteresado',\
+        fields = ['origen','fechCierre','asgeneral','asdetalle','DatInteresado','respuesta', 'observacion',\
                   'Of_respuesta','Of_turnado','eseguimiento','uatencion', 'estatus', 'fechCreacion', 'ulevantamiento']
-        #hidden = ['estatus', 'fechCreacion', 'ulevantamiento']
         labels = {
-            'origen':('Origen'),
-            'fechCierre':('Fecha de Cierre'),
-            'asgeneral':('Asunto General'),
-            'asdetalle':('Detalle del Asunto'),
-            'respuesta': ('Respuesta'),
-            'Of_respuesta':('Numero de Oficio de Respuesta'),
-            'Of_turnado': ('Numero de Oficio de Turnado'),
-            'eseguimiento': ('Encargado'),
-            'utencion':('Usuario atendio')
+            'origen':('Origen:'),
+            'fechCierre':('Fecha de Cierre:'),
+            'asgeneral':('Asunto General:'),
+            'asdetalle':('Detalle del Asunto:'),
+            'Of_respuesta':('Numero de Oficio de Respuesta:'),
+            'Of_turnado': ('Numero de Oficio de Turnado:'),
+            'eseguimiento': ('Encargado de seguimiento:'),
+            'uatencion':('Usuario de atención:'),
+            'respuesta':('Respuesta al caso:'),
+            'observacion':('Observaciones:'),
+            'estatus':('Estatus:')
         }
         widgets = {
-            'estatus':forms.HiddenInput,
+            'asdetalle':forms.Textarea(attrs={'cols': '47', 'rows': '8'}), # attrs={'cols': '47', 'rows': '7'}
+            'respuesta': forms.Textarea(attrs={'cols': '47', 'rows': '5'}),
+            'observacion': forms.Textarea(attrs={'cols': '47', 'rows': '3'}),
             'fechCreacion':forms.HiddenInput,
             'ulevantamiento':forms.HiddenInput,
-            'DatInteresado':forms.HiddenInput
+            'DatInteresado':forms.HiddenInput,
+            'Of_respuesta':forms.HiddenInput,
+            'Of_turnado':forms.HiddenInput,
+            'fechCierre':forms.HiddenInput
         }
 
 class FormEstado(forms.Form):
@@ -120,6 +126,6 @@ class datospersonaNoexiste(forms.Form):
     numExterior = forms.CharField(max_length=8, label='No. Exterior:')
     numInterior = forms.CharField(max_length=8, label='No. Interior:')
     codpost = forms.IntegerField(label='Cod. Postal:')
-    referencia = forms.CharField(label='Referencia:')
+    referencia = forms.CharField(widget=forms.TextInput, label='Referencia:')
     idcatpadron=forms.ModelChoiceField(label='Padron', queryset=CAT_PADRONES.objects.all(),)
 

@@ -301,9 +301,14 @@ def guardaRegistroPersona( regcedula = None ):
     return int(persona_info.pk)
 
 
-def crearcedula(request, paso = 1):
+def crearcedula(request, paso=''):
     datousuario = ''
     userdata = {}
+    if not paso:
+        paso = '1'
+
+    print 'request.method --> %s '% request.method
+    print 'paso --> %s | tipo --> %s'% (paso, type(paso))
 
     if request.method == 'GET':
         print '----- GET ----- y paso %s' % paso
@@ -313,27 +318,26 @@ def crearcedula(request, paso = 1):
             'paso':paso
         }
 
-    elif request.method == 'POST' and paso =='2':
-        regcedula = datospersonaNoexiste(request.POST)
+    elif request.method == 'POST':
+        if paso == '2':
+            regcedula = datospersonaNoexiste(request.POST)
 
-        if regcedula.is_valid() :
-            # CREAR VARIABLES QUE INSTANCIE A LOS MODELOS CORRESPONDIENTES y ASIGNAR LOS CAMPOS CORRESPONDIENTES DE CADA MODELO
-            pkUsuario = guardaRegistroPersona(regcedula)
-            print 'registro guardado con id --> %s' % pkUsuario
-            datousuario = INFO_PERSONA.objects.get(pk=pkUsuario)
-            print 'datousuario --> %s' % datousuario
+            if regcedula.is_valid() :
+                # CREAR VARIABLES QUE INSTANCIE A LOS MODELOS CORRESPONDIENTES y ASIGNAR LOS CAMPOS CORRESPONDIENTES DE CADA MODELO
+                pkUsuario = guardaRegistroPersona(regcedula)
+                print 'registro guardado con id --> %s' % pkUsuario
+                datousuario = INFO_PERSONA.objects.get(pk=pkUsuario)
+                print 'datousuario --> %s' % datousuario
 
-            userdata = {
-                'usuario': request.user,
-                'datousuario': datousuario,
-                'cedulaNueva': cedulaforms(initial={'DatInteresado':datousuario, 'ulevantamiento': request.user }),
-                'paso':paso
-            }
+                userdata = {
+                    'usuario': request.user,
+                    'datousuario': datousuario,
+                    'cedulaNueva': cedulaforms(initial={'DatInteresado':datousuario, 'ulevantamiento': request.user }),
+                    'paso':paso
+                }
+
 
     return render(request, 'crearcedula.html', userdata)
-
-
-
 
 
 def vistaformularios(request):

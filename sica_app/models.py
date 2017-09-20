@@ -124,14 +124,14 @@ class CEDULA(models.Model):
     asdetalle=models.TextField()
     DatInteresado=models.ForeignKey(INFO_PERSONA)
     respuesta=models.TextField()
-    Of_respuesta=models.ForeignKey(OFICIOREL,related_name='respuestaoficio',blank=True,null=True)
-    Of_turnado=models.ForeignKey(OFICIOREL,related_name='turnadooficio',blank=True,null=True)
+    #Of_respuesta=models.ForeignKey(OFICIOREL,related_name='respuestaoficio',blank=True,null=True)
+    #Of_turnado=models.ForeignKey(OFICIOREL,related_name='turnadooficio',blank=True,null=True)
+    Of_respuesta=models.CharField(max_length=255,blank=True,null=True, default='')
+    Of_turnado=models.CharField(max_length=255,blank=True,null=True, default='')
     eseguimiento=models.ForeignKey(User,related_name='eseguimiento',blank=True,null=True)
     ulevantamiento=models.ForeignKey(User,related_name='ulevantamiento')
     uatencion=models.ForeignKey(User,related_name='uatencion',blank=True,null=True)
     observacion=models.TextField()
-
-
 
 
 class ProgCorazonAmigo(models.Model):

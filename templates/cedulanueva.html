@@ -1,0 +1,69 @@
+            <div class="col-sm-12">
+
+                <div class="col-sm-4">
+                    {{ cedulaNueva.origen.errors }}<br />
+                    {{ cedulaNueva.origen.label }}<br />
+                    {{ cedulaNueva.origen }}
+                    {{ cedulaNueva.estatus.errors }}<br />
+                    {{ cedulaNueva.estatus.label }}<br />
+                    {{ cedulaNueva.estatus }}
+                    {{ cedulaNueva.uatencion.errors }}<br />
+                    {{ cedulaNueva.uatencion.label }}<br />
+                    {{ cedulaNueva.uatencion }}
+                    {{ cedulaNueva.eseguimiento.errors }}<br />
+                    {{ cedulaNueva.eseguimiento.label }}<br />
+                    {{ cedulaNueva.eseguimiento }}
+                </div>
+
+                <div class="col-sm-4">
+                    {{ cedulaNueva.asgeneral.error }}<br />
+                    {{ cedulaNueva.asgeneral.label }}<br />
+                    {{ cedulaNueva.asgeneral }}
+                    {{ cedulaNueva.asdetalle.error }}<br />
+                    {{ cedulaNueva.asdetalle.label }}<br />
+                    {{ cedulaNueva.asdetalle }}
+                </div>
+
+                <div class="col-sm-4">
+                    {{ cedulaNueva.respuesta.error }}<br />
+                    {{ cedulaNueva.respuesta.label }}<br />
+                    {{ cedulaNueva.respuesta }}
+                    {{ cedulaNueva.observacion.error }}<br />
+                    {{ cedulaNueva.observacion.label }}<br />
+                    {{ cedulaNueva.observacion }}
+                </div>
+
+                {% comment %}
+
+                    Oficio Turnado:
+                    {{ cedulaNueva.Of_turnado }}<br />
+                    Oficio de Respuesta
+                    {{ cedulaNueva.Of_respuesta }}<br />
+
+
+
+                'origen','fechCierre','asgeneral','asdetalle','DatInteresado',\
+                  'Of_respuesta','Of_turnado','eseguimiento','uatencion', 'estatus', 'fechCreacion', 'ulevantamiento']
+
+
+                    {% for campo in cedulaNueva.visible_fields %}
+                    <div class="col-sm-4">
+                        {% if campo.errors %}
+                            {{campo.errors}}
+                        {% endif %}
+                        {{campo}}
+                        <p>{{campo.label}}</p>
+                    </div>
+
+                    {% if forloop.counter|divisibleby:3 %}
+                    <div class="clearfix"></div>
+                    {% endif %}
+
+
+                    {% endfor %}
+                {%  endcomment%}
+
+            </div>
+                {% for hidden_field in cedulaNueva.hidden_fields %}
+                    {{ hidden_field }}
+                {% endfor %}

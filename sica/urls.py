@@ -29,6 +29,6 @@ urlpatterns = [
     url(r'^formularios$', vistaformularios, name='Formularios '),
     url(r'^datosmunicipio', cambiaMunicipio, name='cambiaMunicipio '),
     url(r'^datoslocalidad', cambiaLocalidad, name='cambiaLocalidad '),
-    # url(r'^crearcedula', crearcedula, name='crearcedula '),
-    url(r'^crearcedula/(?P<paso>[0-9])', crearcedula, name='crearcedula'),
+    url(r'^crearcedula/(?P<paso>[0-9])/$', crearcedula, name='crearcedula'),
+    url(r'^crearcedula', crearcedula, name='crearcedula '),
 ]

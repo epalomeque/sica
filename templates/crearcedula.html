@@ -8,7 +8,7 @@
 
     {% if paso == '1'  %}
     <div class="col-sm-12 widget-container-col ui-sortable">
-        <form action="{% url 'crearcedula' paso=2 %}" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'crearcedula' paso='2' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
             <div class="widget-box ui-sortable-handle">
 
@@ -137,21 +137,7 @@
             </div>
             <div class="widget-body">
 
-            <div class="col-sm-12">
-                <h5 class="blue"><strong>Datos de la cédula</strong></h5>
-                {% for campo in cedulaNueva.visible_fields %}
-                <div class="col-sm-4">
-                    {% if campo.errors %}
-                        {{campo.errors}}
-                    {% endif %}
-                    {{campo}}
-                    <p>{{campo.label}}</p>
-                </div>
-                {% endfor %}
-            </div>
-                {% for hidden_field in cedulaNueva.hidden_fields %}
-                    {{ hidden_field }}
-                {% endfor %}
+                {% include "cedulanueva.html" %}
 
             </div>
         </div>
