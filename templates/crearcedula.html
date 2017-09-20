@@ -1,0 +1,166 @@
+{% extends '_base.html' %}
+{% load staticfiles %}
+{% block settingsbox %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
+{% block content %}
+
+    {% if paso == '1'  %}
+    <div class="col-sm-12 widget-container-col ui-sortable">
+        <form action="{% url 'crearcedula' paso=2 %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+            <div class="widget-box ui-sortable-handle">
+
+                <div class="widget-header">
+                    <h4 class="widget-title"><strong>Cédula de Atención | 1. Registro de Interesado</strong>
+                        </strong>
+                    </h4>
+                    <!-- #section:custom/widget-box.toolbar -->
+                    <div class="widget-toolbar">
+                        <button  class="btn btn-info" type="submit" value="">
+                            <i class="ace-icon fa fa-check bigger-110"></i>
+                            Enviar
+                        </button>
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                    <!-- /section:custom/widget-box.toolbar -->
+                </div>
+                <div class="widget-body">
+                {%for campo in regcedula%}
+                {% if forloop.counter == 1 %}
+                <div class="col-sm-12">
+                    <h5 class="blue"><strong>Datos Generales del Interesado</strong></h5>
+                </div>
+                {% endif%}
+                {% include "wraper.html" %}
+                {% if forloop.counter|divisibleby:3 %}
+                <div class="clearfix hidden-sm-up"></div>
+                {% endif%}
+                {% if forloop.counter == 6 %}
+                <div class="col-sm-12">
+                    <h5 class="blue"><strong>Contacto del Interesado</strong></h5>
+                </div>
+                {% elif forloop.counter == 9 %}
+                <div class="col-sm-12">
+                    <h5 class="blue"><strong>Dirección del Interesado</strong></h5>
+                </div>
+                {% endif%}
+                {%endfor%}
+
+
+                </div>
+            </div>
+        </form>
+        </div>
+
+    {% elif paso == '2' %}
+
+    <div class="col-sm-12 widget-container-col ui-sortable ">
+        <div class="widget-box ui-sortable-handle collapsed">
+
+            <div class="widget-header">
+                <h4 class="widget-title"><strong>1. Datos del Interesado</strong>
+                    </strong>
+                </h4>
+                <!-- #section:custom/widget-box.toolbar -->
+                <div class="widget-toolbar">
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-down"></i>
+                    </a>
+
+                </div>
+                <!-- /section:custom/widget-box.toolbar -->
+            </div>
+            <div class="widget-body">
+
+                <div class="widget-main col-sm-12">
+
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Nombre:<br /><strong style="color:black;">{{ datousuario.idDatos.nombre }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Primer Apellido:<br /><strong style="color:black;">{{ datousuario.idDatos.primApellido }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Segundo Apellido:<br /><strong style="color:black;">{{ datousuario.idDatos.segApellido }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Fecha de Nacimiento:<br /><strong style="color:black;">{{ datousuario.idDatos.fecNac }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Sexo:<br /><strong style="color:black;">{{ datousuario.idDatos.sexo }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Teléfono Local:<br /><strong style="color:black;">{{ datousuario.idContacto.telLocal }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Teléfono Celular.<br /><strong style="color:black;">{{ datousuario.idContacto.telCelular }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Correo Electrónico<br /><strong style="color:black;">{{ datousuario.idContacto.email }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Localidad: <br /><strong style="color:black;">{{ datousuario.iddomicilio.id_localidad }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Vialidad: <br /><strong style="color:black;">{{ datousuario.iddomicilio.vialidad }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Número Exterior:<br /><strong style="color:black;">{{ datousuario.iddomicilio.numExterior }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Número Interior:<br /><strong style="color:black;">{{ datousuario.iddomicilio.numInterior }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Código Postal:<br /><strong style="color:black;">{{ datousuario.iddomicilio.codpost }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Referencia:<br /><strong style="color:black;">{{ datousuario.iddomicilio.referencia }}</strong></p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-sm-12 widget-container-col ui-sortable">
+        <div class="widget-box ui-sortable-handle">
+
+            <div class="widget-header">
+                <h4 class="widget-title"><strong>2. Datos de la cédula</strong>
+                    </strong>
+                </h4>
+                <!-- #section:custom/widget-box.toolbar -->
+                <div class="widget-toolbar">
+                    <button  class="btn btn-info" type="submit" value="">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        Enviar
+                    </button>
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-up"></i>
+                    </a>
+
+                </div>
+                <!-- /section:custom/widget-box.toolbar -->
+            </div>
+            <div class="widget-body">
+
+            <div class="col-sm-12">
+                <h5 class="blue"><strong>Datos de la cédula</strong></h5>
+                {% for campo in cedulaNueva.visible_fields %}
+                <div class="col-sm-4">
+                    {% if campo.errors %}
+                        {{campo.errors}}
+                    {% endif %}
+                    {{campo}}
+                    <p>{{campo.label}}</p>
+                </div>
+                {% endfor %}
+            </div>
+                {% for hidden_field in cedulaNueva.hidden_fields %}
+                    {{ hidden_field }}
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+{%endblock%}
+
+{% block inlinescripts %}
+    <script src="{% static 'assets/js/funcionsica.js' %}"></script>
+{% endblock %}

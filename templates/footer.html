@@ -1,0 +1,33 @@
+{% load staticfiles %}
+	<br /><br /><br />
+	<div class="row">
+		<div class="space-6"></div>
+		<div class="col-xs-12">
+			<div class="footer">
+				<div class="footer-inner">
+					<!-- #section:basics/footer -->
+					{% block footer %}
+					<div class="footer-content">
+						<div class="col-xs-8">
+							<img class="logosdsconescudo" src="{% static 'assets/images/Logo_Federal_Compuesto_horizontal_web.png' %}" />
+							<p>La información contenida en este sitio es unicamente informativa, para obtener un reporte
+								oficial favor de enviar un correo a <a>correopub@tabasco.gob.mx</a> o dirigirse a la
+								<strong>Secretaría de Desarrollo Social</strong> en Paseo de la Sierra # 425, Colonia
+								Reforma, C.P. 86060, Villahermosa, Tabasco  ó comuniquese al teléfono: 3103700
+								extensión 40033
+							</p>
+						</div>
+						<div class="col-xs-4">
+							<h4>Documentación de soporte</h4>
+							<a href="{% static 'assets/doc/PUB_manual_de_usuario.pdf' %}" class="btn btn-link btn-block">Manual de Usuario</a>
+							<a href="{% static 'assets/doc/DOF20170209_lineamientos_pub.pdf' %}" class="btn btn-link btn-block">Lineamiento oficial PUB</a>
+							<a href="{% static 'assets/doc/PUB_convenio.pdf' %}" class="btn btn-link btn-block">Convenio de colaboración</a>
+						</div>
+					</div>
+					{% endblock %}
+					<!-- /section:basics/footer -->
+				</div>
+			</div>
+		</div>
+
+	</div>

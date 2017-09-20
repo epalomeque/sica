@@ -1,0 +1,20 @@
+{% extends '_base.html' %}
+{% load staticfiles %}
+{% block settingsbox %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
+{% block content %}
+
+
+
+<form action="/create_post/" method="POST" id="post-formEstado">{{CatEstado}}</form>
+<form action="/create_post/" method="POST" id="post-formMunicipio">{{CatMunicipio}}</form>
+<form action="/create_post/" method="POST" id="post-formLocalidad">{{Catlocalidad}}</form>
+
+
+{% endblock %}
+
+{% block inlinescripts %}
+    <script src="{% static 'assets/js/funcionsica.js' %}"></script>
+{% endblock %}

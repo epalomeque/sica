@@ -1,0 +1,76 @@
+{% extends 'log_.html' %}
+{% load staticfiles %}
+
+                {% block contenido %}
+
+                {% if user.is_authenticated %}
+
+                    <meta http-equiv="REFRESH" content="0;url={% url 'home' %} ">
+
+                {% else %}
+
+                <!-- Aqui empieza el login -->
+                <!-- Aqui empieza el login -->
+                <div id="login-box" class="login-box visible widget-box no-border">
+                  <div class="widget-body">
+                    <div class="widget-main center">
+                    <!--  <img class="logopubtop" src="{% static 'assets/images/Logo_Federal_Compuesto_horizontal_web.png' %}">-->
+                      <img class="logoca" src="{% static 'assets/images/cor1.jpg' %}">
+
+                      <h2 id='titulosistema'class="header lighter naranja">
+                        <strong>SISTEMA INTEGRAL DE CONTROL DE ATENCION Y SEGUIMIENTO</strong>
+                      </h2>
+
+                      <div class="space-12"></div>
+
+                      {% if form.errors %}
+                      <div class="alert alert-danger">
+                      <button type="button" class="close" data-dismiss="alert">
+						<i class="ace-icon fa fa-times"></i>
+                      </button>
+                      <!-- {{ form.errors }} -->
+                      <p>Existe un error en la combinación de <strong>Usuario/Contraseña</strong>, por favor revisalo e intenta nuevamente</p>
+                      </div>
+                      {% endif %}
+
+                      <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+                        {% csrf_token %}
+                        <label class="block clearfix"><strong>Usuario: </strong></label>
+                        {{ form.username }}
+                        <div class="space"></div>
+                        <label class="block clearfix"><strong>Contraseña: </strong></label>
+                        {{ form.password }}
+                        <div class="space"></div>
+
+                        <div class="clearfix">
+                          <!--label class="inline">
+                            <input type="checkbox" class="ace" />
+                            <span class="lbl"> Recordarme</span>
+                          </label-->
+
+                          <button type="submit" class="width-55 pull-center btn btn-warning">
+                            <!--i class="ace-icon fa fa-key"></i-->
+                            <span class="bigger-110"><strong>Iniciar sesión</strong></span>
+                            <input type="hidden" name="next" value="/home"/>
+                          </button>
+                        </div>
+
+                        </fieldset>
+                      </form>
+
+                      <div class="space-6"></div>
+
+                      <div class="social-login center">
+                        <p>Paseo de la Sierra # 425 Col. Reforma, C.P. 86060 Villahermosa, Tabasco | <strong>Teléfono: </strong>(993) 3103700 ext 40030</p>
+                      </div>
+                    </div><!-- /.widget-main -->
+
+                  </div><!-- /.widget-body -->
+                </div><!-- /.login-box -->
+
+                <!-- Aqui termina el login -->
+                <!-- Aqui termina el login -->
+
+                {% endif %}
+
+                {% endblock %}

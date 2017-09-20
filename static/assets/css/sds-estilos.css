@@ -1,0 +1,64 @@
+.naranja {
+    /* color: #ff6600; */
+    color: rgba(255, 113, 0, 0.71) !important;
+}
+
+.login-container {
+    width: 450px !important;
+    margin: 0 auto;
+}
+
+.logopub {
+    margin-top: 10px;
+    width: 70%;
+}
+
+.login-layout
+{
+  /* background-color: #F2F3EB !important; */
+  /* background-color: #ff6600 !important; */
+  background-color: rgba(255, 113, 0, 0.71) !important;
+  margin-top: 50px;
+}
+
+.login-layout label{
+    text-align: left;
+    color: rgba(255, 113, 0, 0.71);
+    /* color: #ff6600; */
+    margin-bottom: 0px !important;
+
+}
+
+.login-layout .widget-box,
+.login-layout .login-box .widget-main{
+    background-color: #F2F3EB !important;
+    /* background-color:#ff6600 !important; */
+}
+
+/*
+.btn-naranja, .btn-naranja:focus {
+background-color: #ffb752 !important;
+border-color: #ffb752 !important;
+    border-top-color: rgb(255, 183, 82) !important;
+    border-right-color: rgb(255, 183, 82) !important;
+    border-bottom-color: rgb(255, 183, 82) !important;
+    border-left-color: rgb(255, 183, 82) !important;
+}
+*/
+
+.alert.alert-danger ul{
+    list-style: none;
+    text-align: left;
+}
+
+.social-login {
+    padding-top: 10px;
+    border-top: solid;
+    border-top-width: thin;
+    border-top-color: #9baab3;
+}
+
+span.numerorecords {
+  display: block !important;
+  font-size: 32px !important;
+}

@@ -1,0 +1,193 @@
+{% extends '_base.html' %}
+{% block settingsbox %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
+{% block content %}
+
+
+<div class="row">
+    <div class="col-sm-2"></div>
+    <form action="#" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+            {{ busquedaForms.errors }}
+            <div class="col-sm-2">
+            {{ busquedaForms.CD_filtro }}
+            </div>
+            <div class="col-sm-5">
+            {{ busquedaForms.CD_busqueda }}
+            </div>
+            <div class="col-sm-1">
+            <input id="boton_buscar" type="submit" name="{{busquedaForms.prefix}}" value="Buscar" class="btn btn-app btn-success radius-4 align-center">
+            </div>
+            </input>
+
+    </form>
+    <div class="col-sm-2"></div>
+</div>
+
+{%if sinregistro%}
+    <br>
+    <h2 class="center"><strong style="color:red;">No hay registro que coincidan</strong></h2>
+    <br>
+
+<div class="center">
+    <a href="crearcedula/1" class="btn btn-app btn-primary no-radius btn-sm">
+											<i class="ace-icon fa fa-pencil-square-o bigger-230"></i>
+											Agregar
+
+										</a>
+</div>
+
+{%endif%}
+
+{% if datos_ben %}
+
+    <!-- #section:custom/widget-box -->
+
+<div class="col-sm-12 widget-container-col ui-sortable">
+
+    <div class="widget-box ui-sortable-handle">
+
+        <div class="widget-header">
+            <h5 class="widget-title"><strong>Datos del beneficiario</strong>
+                | {{datos_ben.folio.etiqueta}} <strong style="color:black;">{{datos_ben.folio.valor}}</strong>
+                | {{datos_ben.nombre.etiqueta}}<strong style="color:black;"> {{datos_ben.appaterno.valor}} {{datos_ben.apmaterno.valor}}, {{datos_ben.nombre.valor}}</strong>
+            </h5>
+
+            <!-- #section:custom/widget-box.toolbar -->
+            <div class="widget-toolbar">
+                <a href="#" data-action="collapse">
+                    <i class="ace-icon fa fa-chevron-up"></i>
+                </a>
+
+            </div>
+
+            <!-- /section:custom/widget-box.toolbar -->
+        </div>
+
+        <div class="widget-body">
+
+            <div class="widget-main col-sm-12">
+
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.txtsolmunicipio.etiqueta}}<br /><strong style="color: black;">{{datos_ben.txtsolmunicipio.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.cvelocal.etiqueta}}<br /><strong style="color: black;">{{datos_ben.cvelocal.valor}} | {{datos_ben.txtsollocalidad.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.calleynum.etiqueta}}<br /><strong style="color: black;">{{datos_ben.calleynum.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.status.etiqueta}}<br /><strong style="color: black;">{{datos_ben.status.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.acomentario.etiqueta}}<br /><strong style="color: black;">{{datos_ben.acomentario.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.etapa.etiqueta}}<br /><strong style="color: black;">{{datos_ben.etapa.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.paquete.etiqueta}}<br /><strong style="color: black;">{{datos_ben.paquete.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.anio.etiqueta}}<br /><strong style="color: black;">{{datos_ben.anio.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.tel.etiqueta}}<br /><strong style="color: black;">{{datos_ben.tel.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.sexo.etiqueta}}<br /><strong style="color: black;">{{datos_ben.sexo.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.fecnac.etiqueta}}<br /><strong style="color: black;">{{datos_ben.fecnac.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.curp.etiqueta}}<br /><strong style="color: black;">{{datos_ben.curp.valor}}</strong>
+            </p>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="col-sm-12 widget-container-col ui-sortable">
+
+    <div class="widget-box ui-sortable-handle">
+
+        <div class="widget-header">
+            <h5 class="widget-title"><strong>Datos del Representante</strong>
+                | {{datos_ben.rep_nombre.etiqueta}}<strong style="color:black;"> {{datos_ben.rep_appaterno.valor}} {{datos_ben.rep_apmaterno.valor}}, {{datos_ben.rep_nombre.valor}}</strong>
+            </h5>
+
+            <!-- #section:custom/widget-box.toolbar -->
+            <div class="widget-toolbar">
+                <a href="#" data-action="collapse">
+                    <i class="ace-icon fa fa-chevron-up"></i>
+                </a>
+
+            </div>
+
+            <!-- /section:custom/widget-box.toolbar -->
+        </div>
+
+        <div class="widget-body">
+
+            <div class="widget-main col-sm-12">
+
+
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.txtrepmunicipio.etiqueta}}<br /><strong style="color: black;">{{datos_ben.txtrepmunicipio.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.rep_cvelocal.etiqueta}}<br /><strong style="color: black;">{{datos_ben.rep_cvelocal.valor}} | {{datos_ben.txtreplocalidad.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.rep_calleynum.etiqueta}}<br /><strong style="color: black;">{{datos_ben.rep_calleynum.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.rep_tel.etiqueta}}<br /><strong style="color: black;">{{datos_ben.rep_tel.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.rep_sexo.etiqueta}}<br /><strong style="color: black;">{{datos_ben.rep_sexo.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_ben.rep_fecnac.etiqueta}}<br /><strong style="color: black;">{{datos_ben.fecnac.valor}}</strong>
+            </p>
+
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+    <!-- /section:custom/widget-box -->
+
+
+
+    <hr />
+    {% endif %}
+
+    {% if cedulaForms and elGET %}
+    <!--form action="#" method="post">
+        {% csrf_token %}
+            {{ cedulaForms.errors }}
+            {{ cedulaForms.as_p }}
+            <input type="submit" name="{{ cedulaForms.prefix }}" value="Agregar" class="btn btn-app btn-primary radius-4 align-center">
+            </input>
+
+    </form -->
+
+    <hr />
+
+    {% endif %}
+
+{%endblock%}
