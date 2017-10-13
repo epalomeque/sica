@@ -3,11 +3,13 @@
 from datetime import date
 from datetime import datetime
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.core import serializers
+from django.db.models import CharField, Value as V
+from django.db.models.functions import Concat
 from django.core.serializers.json import DjangoJSONEncoder
 from models import ProgCorazonAmigo, CAT_ESTADO,CAT_MUNICIPIO,CAT_LOCALIDAD, PERSONA_DOMICILIO, PERSONA_CONTACTO, \
-                    PERSONA_DATOS, INFO_PERSONA, CAT_PADRONES
+                    PERSONA_DATOS, INFO_PERSONA, CAT_PADRONES, CEDULA
 from forms import Busquedaform, cedulaforms, datospersonaExiste, datospersonaNoexiste, FormEstado, FormMunicipio, \
                     FormLocalidad
 
@@ -76,22 +78,40 @@ def sexo2text(sexo):
     return txtsexo
 
 
+def BusquedaXNombre(cdbusqueda):
+    resultado = ''
+    busqueda = str(cdbusqueda)
+
+    queryset = ProgCorazonAmigo.objects.using('corazon_amigo').values('folio').\
+        annotate(nomCompleto=Concat('nombre', V(' '), 'appaterno', V(' '),'apmaterno', output_field=CharField()))
+    # resbusqueda = ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=cdbusqueda)
+
+    # author = Author.objects.annotate(screen_name = Concat('name', V(' ('), 'goes_by', V(')'), output_field = CharField())).get()
+
+    print queryset
+
+    return True#resultado
+
+
 def home(request):
     cdbusqueda=''
     cdfiltro=''
     resbusqueda=''
-    datos_ben={}
+    datos_busq={}
     busqueda = ''
     cedulaForms = ''
     elGET = ''
     nohayregistro = False
 
+    # Valida el metodo de la peticion (POST o GET)
     if request.method == 'POST':
+
+        # Valida que el formulario haya sido enviado
         if 'busq' in request.POST:
-            print 'entre busqueda gil'
+            # print 'entre busqueda gil'
             busqueda = Busquedaform(request.POST,prefix='busq')
-            cedulaForms = cedulaforms(prefix='cedula',
-                                      initial={'ulevantamiento':request.user, 'fechCreacion':date.today(), 'estatus':1})
+            # cedulaForms = cedulaforms(prefix='cedula',
+            #                           initial={'ulevantamiento':request.user, 'fechCreacion':date.today(), 'estatus':1})
             #print cedulaForms
             elGET = True
 
@@ -99,13 +119,19 @@ def home(request):
                 cdbusqueda = busqueda['CD_busqueda'].value()
                 cdfiltro = busqueda['CD_filtro'].value()
 
+                # Busqueda en blanco
                 if cdfiltro == '4':
+                    print 'Filtro 4 | Ninguna busqueda'
+                    resbusqueda = ''
+
+                # Busqueda por folio de padron
+                if cdfiltro == '3':
                     resbusqueda = ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=cdbusqueda)
                     #print len(resbusqueda)
                     if len(resbusqueda) >0:
                         for registro in resbusqueda:
 
-                            datos_ben = {
+                            datos_busq = {
                                 'folio': {'valor': validarNone(registro.folio),
                                           'etiqueta': 'Folio:'},
                                 'appaterno': {'valor': validarNone(registro.appaterno),
@@ -163,27 +189,36 @@ def home(request):
                                 'anio': {'valor': validarNone(anio2txtanio(registro.versionca)),
                                          'etiqueta': 'Versión C.A'},
                             }
-                    #elif len(resbusqueda)=0:
+
                     else: 
                         nohayregistro=True
-                       # print(nohayregistro)
 
+                # Busqueda por folio de cedula
+                elif cdfiltro == '2':
+                    resbusqueda = CEDULA.objects.filter(pk=cdbusqueda)
 
-                    # print datos_ben
+                    if len(resbusqueda) >0:
+                        print 'Si hay registros'
+                        for registro in resbusqueda:
+                            datos_busq = registro
+                    else:
+                        print 'No hay registros'
+                        nohayregistro=True
+
+                # Busqueda por nombre del demandante
+                elif cdfiltro == '1':
+                    # resbusqueda = BusquedaXNombre(cdbusqueda)
+                    BusquedaXNombre(cdbusqueda)
+                    # ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=cdbusqueda)
+
 
         elif 'cedula' in request.POST:
             elGET = True
             cedulaForms = cedulaforms(request.POST, prefix='cedula')
-            #print '---------'
-            #print cedulaForms
-            #print 'AQUI TOY'
+
 
     elif request.method == 'GET':
-        #print 'AQUI TOYGET'
-        #print request
         busqueda = Busquedaform(prefix='busq')
-        cedulaForms = cedulaforms(prefix='cedula')
-        #print cedulaForms
 
     else:
         print 'Ni post ni get'
@@ -194,15 +229,18 @@ def home(request):
         'cdbusqueda': cdbusqueda,
         'cdfiltro': cdfiltro,
         'resbusqueda': resbusqueda,
-        'datos_ben': datos_ben,
-        'cedulaForms': cedulaForms,
+        'datos_busq': datos_busq,
+        # 'cedulaForms': cedulaForms,
         'elGET': elGET,
         'DPN':datospersonaNoexiste(),
         'DPE':datospersonaExiste(),
         'sinregistro':nohayregistro
     }
 
+    print userdata
+
     return render(request, 'sica_home.html', userdata)
+
 
 def cambiaMunicipio(request):
 
@@ -332,9 +370,35 @@ def crearcedula(request, paso=''):
                 userdata = {
                     'usuario': request.user,
                     'datousuario': datousuario,
-                    'cedulaNueva': cedulaforms(initial={'DatInteresado':datousuario, 'ulevantamiento': request.user }),
+                    'cedulaNueva': cedulaforms(initial={'DatInteresado':datousuario,
+                                                        'fechCreacion':datetime.now(),
+                                                        'fechCierre': '',
+                                                        'ulevantamiento': request.user,
+                                                        'Of_respuesta': '',
+                                                        'Of_turnado': ''
+                                                        }),
                     'paso':paso
                 }
+
+        elif paso == '3':
+            cedula = cedulaforms(request.POST)
+
+            if cedula.is_valid():
+                lacedula = cedula.save()
+
+                print 'Cedula salvada'
+                print lacedula
+
+                print 'Datos del interesado ID --> %s' % cedula['DatInteresado'].value()
+                #datoUsuario =
+
+
+            userdata = {
+                'usuario': request.user,
+                'datousuario': INFO_PERSONA.objects.get( pk=cedula['DatInteresado'].value() ),
+                'cedula': lacedula,
+                'paso': paso
+            }
 
 
     return render(request, 'crearcedula.html', userdata)

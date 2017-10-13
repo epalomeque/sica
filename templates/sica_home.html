@@ -10,17 +10,25 @@
     <div class="col-sm-2"></div>
     <form action="#" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-            {{ busquedaForms.errors }}
-            <div class="col-sm-2">
-            {{ busquedaForms.CD_filtro }}
+
+            <div class="row">
+                <div class="col align-self-center col-sm-8">
+                {{ busquedaForms.errors }}
+                </div>
             </div>
-            <div class="col-sm-5">
-            {{ busquedaForms.CD_busqueda }}
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-2">
+                {{ busquedaForms.CD_filtro }}
+                </div>
+                <div class="col-sm-5">
+                {{ busquedaForms.CD_busqueda }}
+                </div>
+                <div class="col-sm-1">
+                <input id="boton_buscar" type="submit" name="{{busquedaForms.prefix}}" value="Buscar" class="btn btn-app btn-success radius-4 align-center">
+                </div>
+                </input>
             </div>
-            <div class="col-sm-1">
-            <input id="boton_buscar" type="submit" name="{{busquedaForms.prefix}}" value="Buscar" class="btn btn-app btn-success radius-4 align-center">
-            </div>
-            </input>
 
     </form>
     <div class="col-sm-2"></div>
@@ -28,31 +36,35 @@
 
 {%if sinregistro%}
     <br>
-    <h2 class="center"><strong style="color:red;">No hay registro que coincidan</strong></h2>
+    <h2 class="center"><strong style="color:red;">No se encontró registro con ese número de folio en la base de datos</strong></h2>
+    <h4 class="center">Te recomendamos ampliar tu busqueda usando el nombre del demandante</h4>
     <br>
 
 <div class="center">
-    <a href="crearcedula/1" class="btn btn-app btn-primary no-radius btn-sm">
-											<i class="ace-icon fa fa-pencil-square-o bigger-230"></i>
-											Agregar
+    <!--a href="crearcedula/1" class="btn btn-app btn-primary no-radius btn-sm">
+        <i class="ace-icon fa fa-pencil-square-o bigger-230"></i>
+        Agregar
+    </a-->
 
-										</a>
 </div>
 
 {%endif%}
 
-{% if datos_ben %}
+{% if datos_busq %}
 
     <!-- #section:custom/widget-box -->
 
-<div class="col-sm-12 widget-container-col ui-sortable">
+    {% if cdfiltro = '3' %}
+    <!-- busqueda por folio de padron -->
+
+    <div class="col-sm-12 widget-container-col ui-sortable">
 
     <div class="widget-box ui-sortable-handle">
 
         <div class="widget-header">
             <h5 class="widget-title"><strong>Datos del beneficiario</strong>
-                | {{datos_ben.folio.etiqueta}} <strong style="color:black;">{{datos_ben.folio.valor}}</strong>
-                | {{datos_ben.nombre.etiqueta}}<strong style="color:black;"> {{datos_ben.appaterno.valor}} {{datos_ben.apmaterno.valor}}, {{datos_ben.nombre.valor}}</strong>
+                | {{datos_busq.folio.etiqueta}} <strong style="color:black;">{{datos_busq.folio.valor}}</strong>
+                | {{datos_busq.nombre.etiqueta}}<strong style="color:black;"> {{datos_busq.appaterno.valor}} {{datos_busq.apmaterno.valor}}, {{datos_busq.nombre.valor}}</strong>
             </h5>
 
             <!-- #section:custom/widget-box.toolbar -->
@@ -71,40 +83,40 @@
             <div class="widget-main col-sm-12">
 
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.txtsolmunicipio.etiqueta}}<br /><strong style="color: black;">{{datos_ben.txtsolmunicipio.valor}}</strong>
+                {{datos_busq.txtsolmunicipio.etiqueta}}<br /><strong style="color: black;">{{datos_busq.txtsolmunicipio.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.cvelocal.etiqueta}}<br /><strong style="color: black;">{{datos_ben.cvelocal.valor}} | {{datos_ben.txtsollocalidad.valor}}</strong>
+                {{datos_busq.cvelocal.etiqueta}}<br /><strong style="color: black;">{{datos_busq.cvelocal.valor}} | {{datos_busq.txtsollocalidad.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.calleynum.etiqueta}}<br /><strong style="color: black;">{{datos_ben.calleynum.valor}}</strong>
+                {{datos_busq.calleynum.etiqueta}}<br /><strong style="color: black;">{{datos_busq.calleynum.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.status.etiqueta}}<br /><strong style="color: black;">{{datos_ben.status.valor}}</strong>
+                {{datos_busq.status.etiqueta}}<br /><strong style="color: black;">{{datos_busq.status.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.acomentario.etiqueta}}<br /><strong style="color: black;">{{datos_ben.acomentario.valor}}</strong>
+                {{datos_busq.acomentario.etiqueta}}<br /><strong style="color: black;">{{datos_busq.acomentario.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.etapa.etiqueta}}<br /><strong style="color: black;">{{datos_ben.etapa.valor}}</strong>
+                {{datos_busq.etapa.etiqueta}}<br /><strong style="color: black;">{{datos_busq.etapa.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.paquete.etiqueta}}<br /><strong style="color: black;">{{datos_ben.paquete.valor}}</strong>
+                {{datos_busq.paquete.etiqueta}}<br /><strong style="color: black;">{{datos_busq.paquete.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.anio.etiqueta}}<br /><strong style="color: black;">{{datos_ben.anio.valor}}</strong>
+                {{datos_busq.anio.etiqueta}}<br /><strong style="color: black;">{{datos_busq.anio.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.tel.etiqueta}}<br /><strong style="color: black;">{{datos_ben.tel.valor}}</strong>
+                {{datos_busq.tel.etiqueta}}<br /><strong style="color: black;">{{datos_busq.tel.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.sexo.etiqueta}}<br /><strong style="color: black;">{{datos_ben.sexo.valor}}</strong>
+                {{datos_busq.sexo.etiqueta}}<br /><strong style="color: black;">{{datos_busq.sexo.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.fecnac.etiqueta}}<br /><strong style="color: black;">{{datos_ben.fecnac.valor}}</strong>
+                {{datos_busq.fecnac.etiqueta}}<br /><strong style="color: black;">{{datos_busq.fecnac.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.curp.etiqueta}}<br /><strong style="color: black;">{{datos_ben.curp.valor}}</strong>
+                {{datos_busq.curp.etiqueta}}<br /><strong style="color: black;">{{datos_busq.curp.valor}}</strong>
             </p>
 
             </div>
@@ -114,15 +126,13 @@
 
 </div>
 
-
-
-<div class="col-sm-12 widget-container-col ui-sortable">
+    <div class="col-sm-12 widget-container-col ui-sortable">
 
     <div class="widget-box ui-sortable-handle">
 
         <div class="widget-header">
             <h5 class="widget-title"><strong>Datos del Representante</strong>
-                | {{datos_ben.rep_nombre.etiqueta}}<strong style="color:black;"> {{datos_ben.rep_appaterno.valor}} {{datos_ben.rep_apmaterno.valor}}, {{datos_ben.rep_nombre.valor}}</strong>
+                | {{datos_busq.rep_nombre.etiqueta}}<strong style="color:black;"> {{datos_busq.rep_appaterno.valor}} {{datos_busq.rep_apmaterno.valor}}, {{datos_busq.rep_nombre.valor}}</strong>
             </h5>
 
             <!-- #section:custom/widget-box.toolbar -->
@@ -142,22 +152,22 @@
 
 
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.txtrepmunicipio.etiqueta}}<br /><strong style="color: black;">{{datos_ben.txtrepmunicipio.valor}}</strong>
+                {{datos_busq.txtrepmunicipio.etiqueta}}<br /><strong style="color: black;">{{datos_busq.txtrepmunicipio.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.rep_cvelocal.etiqueta}}<br /><strong style="color: black;">{{datos_ben.rep_cvelocal.valor}} | {{datos_ben.txtreplocalidad.valor}}</strong>
+                {{datos_busq.rep_cvelocal.etiqueta}}<br /><strong style="color: black;">{{datos_busq.rep_cvelocal.valor}} | {{datos_busq.txtreplocalidad.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.rep_calleynum.etiqueta}}<br /><strong style="color: black;">{{datos_ben.rep_calleynum.valor}}</strong>
+                {{datos_busq.rep_calleynum.etiqueta}}<br /><strong style="color: black;">{{datos_busq.rep_calleynum.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.rep_tel.etiqueta}}<br /><strong style="color: black;">{{datos_ben.rep_tel.valor}}</strong>
+                {{datos_busq.rep_tel.etiqueta}}<br /><strong style="color: black;">{{datos_busq.rep_tel.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.rep_sexo.etiqueta}}<br /><strong style="color: black;">{{datos_ben.rep_sexo.valor}}</strong>
+                {{datos_busq.rep_sexo.etiqueta}}<br /><strong style="color: black;">{{datos_busq.rep_sexo.valor}}</strong>
             </p>
             <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
-                {{datos_ben.rep_fecnac.etiqueta}}<br /><strong style="color: black;">{{datos_ben.fecnac.valor}}</strong>
+                {{datos_busq.rep_fecnac.etiqueta}}<br /><strong style="color: black;">{{datos_busq.fecnac.valor}}</strong>
             </p>
 
 
@@ -168,13 +178,22 @@
 
 </div>
 
+    {% elif cdfiltro = '2' %}
+    <!-- busqueda por folio de cedula -->
+    <p>busqueda por folio de cedula</p>
+    {{datos_busq}}
+
+    {% elif cdfiltro = '1' %}
+    <!-- busqueda por nombre de demandante -->
+    <p>busqueda por nombre de demandante</p>
+    {{datos_busq}}
+
+    {% endif %}
 
     <!-- /section:custom/widget-box -->
 
-
-
     <hr />
-    {% endif %}
+{% endif %}
 
     {% if cedulaForms and elGET %}
     <!--form action="#" method="post">

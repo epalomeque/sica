@@ -96,7 +96,6 @@ class PERSONA_DOMICILIO(models.Model):
     referencia=models.TextField()
 
 
-
 class INFO_PERSONA(models.Model):
     idPadron=models.ForeignKey(CAT_PADRONES)
     idPersona=models.CharField(max_length=10)
@@ -107,6 +106,8 @@ class INFO_PERSONA(models.Model):
     def get_fields(self):
         return [(field.name, field.value_to_string(self)) for field in INFO_PERSONA._meta.fields]
 
+    def __unicode__(Self):
+        return 'PK ->%s | %s | %s' % (Self.pk, Self.idPadron, Self.idPersona)
 
 class OFICIOREL(models.Model):
     fecha=models.DateField()
@@ -118,20 +119,21 @@ class OFICIOREL(models.Model):
 class CEDULA(models.Model):
     estatus=models.ForeignKey(CAT_ESTATUS)
     origen=models.ForeignKey(ORIGEN_CEDULA)
-    fechCreacion=models.DateField()
-    fechCierre=models.DateField(blank=True,null=True)
+    fechCreacion=models.DateTimeField()
+    fechCierre=models.DateTimeField(blank=True,null=True)
     asgeneral=models.ForeignKey(CAT_ASUNTOS)
     asdetalle=models.TextField()
     DatInteresado=models.ForeignKey(INFO_PERSONA)
-    respuesta=models.TextField()
-    #Of_respuesta=models.ForeignKey(OFICIOREL,related_name='respuestaoficio',blank=True,null=True)
-    #Of_turnado=models.ForeignKey(OFICIOREL,related_name='turnadooficio',blank=True,null=True)
+    respuesta=models.TextField(blank=True,null=True, default='')
     Of_respuesta=models.CharField(max_length=255,blank=True,null=True, default='')
     Of_turnado=models.CharField(max_length=255,blank=True,null=True, default='')
     eseguimiento=models.ForeignKey(User,related_name='eseguimiento',blank=True,null=True)
     ulevantamiento=models.ForeignKey(User,related_name='ulevantamiento')
     uatencion=models.ForeignKey(User,related_name='uatencion',blank=True,null=True)
-    observacion=models.TextField()
+    observacion=models.TextField(blank=True,null=True, default='')
+
+    def __unicode__(Self):
+        return 'PK ->%s | %s | %s' % (Self.pk, Self.fechCreacion, Self.asgeneral)
 
 
 class ProgCorazonAmigo(models.Model):

@@ -9,7 +9,7 @@ from models import CEDULA, CAT_ESTADO, CAT_MUNICIPIO, CAT_LOCALIDAD, CAT_PADRONE
 
 
 FILTROBUSQUEDA = {
-    (4,'Folio Padrón'),(3,'Folio Cedula'),(2,'Nombre Beneficiario'),(1,'Nombre de Representante')
+    (4, '-----'),(3,'Folio de Padrón'),(2,'Folio de Cedula'),(1,'Nombre del Demandante')
 }
 
 class Busquedaform(forms.Form):
@@ -17,7 +17,6 @@ class Busquedaform(forms.Form):
         choices=FILTROBUSQUEDA,
         label='Filtro',
     )
-
 
     CD_busqueda = forms.CharField(
        label='Busqueda'
@@ -27,32 +26,36 @@ class Busquedaform(forms.Form):
 class cedulaforms(ModelForm):
     class Meta:
         model = CEDULA
-        fields = ['origen','fechCierre','asgeneral','asdetalle','DatInteresado','respuesta', 'observacion',\
-                  'Of_respuesta','Of_turnado','eseguimiento','uatencion', 'estatus', 'fechCreacion', 'ulevantamiento']
+        fields = ['estatus', 'origen', 'fechCreacion', 'fechCierre', 'asgeneral', 'asdetalle', 'DatInteresado',
+                  'respuesta', 'Of_respuesta', 'Of_turnado', 'eseguimiento', 'ulevantamiento', 'uatencion', 'observacion' ]
         labels = {
-            'origen':('Origen:'),
-            'fechCierre':('Fecha de Cierre:'),
-            'asgeneral':('Asunto General:'),
-            'asdetalle':('Detalle del Asunto:'),
-            'Of_respuesta':('Numero de Oficio de Respuesta:'),
-            'Of_turnado': ('Numero de Oficio de Turnado:'),
-            'eseguimiento': ('Encargado de seguimiento:'),
-            'uatencion':('Usuario de atención:'),
-            'respuesta':('Respuesta al caso:'),
-            'observacion':('Observaciones:'),
-            'estatus':('Estatus:')
+                'estatus':('Estatus:'),
+                'origen':('Origen:'),
+                'fechCreacion':('Fecha de Creación:'),
+                'fechCierre':('Fecha de Cierre'),
+                'asgeneral':('Asunto General:'),
+                'asdetalle':('Detalle del Asunto:'),
+                'DatInteresado': ('Datos del Interesado'),
+                'respuesta':('Respuesta al caso:'),
+                'Of_respuesta':('Numero de Oficio de Respuesta:'),
+                'Of_turnado':('Numero de Oficio de Turnado:'),
+                'eseguimiento':('Encargado de seguimiento:'),
+                'ulevantamiento':('Usuario de Levantamiento:'),
+                'uatencion':('Usuario de atención:'),
+                'observacion':('Observaciones:')
         }
         widgets = {
-            'asdetalle':forms.Textarea(attrs={'cols': '47', 'rows': '8'}), # attrs={'cols': '47', 'rows': '7'}
-            'respuesta': forms.Textarea(attrs={'cols': '47', 'rows': '5'}),
-            'observacion': forms.Textarea(attrs={'cols': '47', 'rows': '3'}),
-            'fechCreacion':forms.HiddenInput,
-            'ulevantamiento':forms.HiddenInput,
-            'DatInteresado':forms.HiddenInput,
-            'Of_respuesta':forms.HiddenInput,
-            'Of_turnado':forms.HiddenInput,
-            'fechCierre':forms.HiddenInput
+                'fechCreacion':forms.HiddenInput,
+                'fechCierre':forms.HiddenInput,
+                'asdetalle':forms.Textarea(attrs={'cols': '47', 'rows': '7'}),
+                'DatInteresado':forms.HiddenInput,
+                'respuesta':forms.Textarea(attrs={'cols': '47', 'rows': '5'}),
+                'Of_respuesta':forms.HiddenInput,
+                'Of_turnado':forms.HiddenInput,
+                'ulevantamiento':forms.HiddenInput,
+                'observacion':forms.Textarea(attrs={'cols': '47', 'rows': '3'}),
         }
+
 
 class FormEstado(forms.Form):
     nomEstado = forms.ModelChoiceField(queryset=CAT_ESTADO.objects.order_by('idEstado'),
@@ -83,6 +86,7 @@ class FormLocalidad(forms.Form):
 class datospersonaExiste(forms.Form):
     idcatpadron=forms.IntegerField()
     idpersona=forms.CharField(max_length=10)
+
 
 class datospersonaNoexiste(forms.Form):
     SEXO = (

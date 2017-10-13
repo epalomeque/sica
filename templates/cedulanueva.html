@@ -33,35 +33,6 @@
                     {{ cedulaNueva.observacion }}
                 </div>
 
-                {% comment %}
-
-                    Oficio Turnado:
-                    {{ cedulaNueva.Of_turnado }}<br />
-                    Oficio de Respuesta
-                    {{ cedulaNueva.Of_respuesta }}<br />
-
-
-
-                'origen','fechCierre','asgeneral','asdetalle','DatInteresado',\
-                  'Of_respuesta','Of_turnado','eseguimiento','uatencion', 'estatus', 'fechCreacion', 'ulevantamiento']
-
-
-                    {% for campo in cedulaNueva.visible_fields %}
-                    <div class="col-sm-4">
-                        {% if campo.errors %}
-                            {{campo.errors}}
-                        {% endif %}
-                        {{campo}}
-                        <p>{{campo.label}}</p>
-                    </div>
-
-                    {% if forloop.counter|divisibleby:3 %}
-                    <div class="clearfix"></div>
-                    {% endif %}
-
-
-                    {% endfor %}
-                {%  endcomment%}
 
             </div>
                 {% for hidden_field in cedulaNueva.hidden_fields %}
