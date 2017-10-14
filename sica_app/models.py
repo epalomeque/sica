@@ -62,7 +62,7 @@ class PERSONA_CONTACTO(models.Model):
 
 
 class CAT_ESTADO(models.Model):
-    idEstado=models.CharField(max_length=2)
+    idEstado=models.CharField(max_length=2, unique=True)
     nomEstado=models.CharField(max_length=150)
 
     def __unicode__(Self):
