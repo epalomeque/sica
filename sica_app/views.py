@@ -5,10 +5,11 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.core import serializers
+from django.contrib.auth.decorators import login_required
 from django.db.models import CharField, Value as V
 from django.db.models.functions import Concat
 from django.core.serializers.json import DjangoJSONEncoder
-from models import ProgCorazonAmigo, CAT_ESTADO,CAT_MUNICIPIO,CAT_LOCALIDAD, PERSONA_DOMICILIO, PERSONA_CONTACTO, \
+from models import ProgCorazonAmigo, CAT_ESTADO, CAT_MUNICIPIO,CAT_LOCALIDAD, PERSONA_DOMICILIO, PERSONA_CONTACTO, \
                     PERSONA_DATOS, INFO_PERSONA, CAT_PADRONES, CEDULA
 from forms import Busquedaform, cedulaforms, datospersonaExiste, datospersonaNoexiste, FormEstado, FormMunicipio, \
                     FormLocalidad
@@ -78,21 +79,117 @@ def sexo2text(sexo):
     return txtsexo
 
 
+def cambiaMunicipio(request):
+
+    if request.method == 'GET':
+        post_text = request.GET.get('the_post')
+        actmunicipio = list(CAT_MUNICIPIO.objects.filter(idEstado__idEstado=post_text))
+        data = serializers.serialize("json", actmunicipio )
+
+        return HttpResponse(data,content_type='application/json')
+
+    else:
+        return HttpResponse(
+            json.dumps({"nothing to see": "this isn't happening"}),
+            content_type="application/json"
+        )
+
+
+def cambiaLocalidad(request):
+
+    if request.method == 'GET':
+        #print 'menso'
+        #print request.GET
+        #print 'toy aqui'
+        post_text = request.GET.get('the_post')
+        #print 'post_text -> %s'% post_text
+        edo_actual= request.GET.get('estado_actual')
+        #print edo_actual
+        #listamunicipio = list(CAT_MUNICIPIO.objects.filter(idEstado__idEstado=post_text))
+
+        #actlocalidad = list(CAT_LOCALIDAD.objects.filter(idMunicipio__idmunicipio=post_text, idMunicipio__idEstado__idEstado=edo_actual ))
+        actlocalidad = list(CAT_LOCALIDAD.objects.filter(idMunicipio=post_text,
+                                                         idMunicipio__idEstado__idEstado=edo_actual))
+        #print actlocalidad
+        data = serializers.serialize("json", actlocalidad,fields=('pk','nomLocalidad'))
+        #print 'data  -> %s' % data
+
+        #actmunicipio = CAT_MUNICIPIO.objects.all().values()
+        return HttpResponse(data,content_type='application/json')
+
+    else:
+        return HttpResponse(
+            json.dumps({"nothing to see": "this isn't happening"}),
+            content_type="application/json"
+        )
+
+
+def guardaRegistroPersona( regcedula = None ):
+    if regcedula:
+        datos_persona = PERSONA_DATOS(
+            nombre=regcedula['nombre'].value(),
+            primApellido=regcedula['primApellido'].value(),
+            segApellido=regcedula['segApellido'].value(),
+            fecNac=regcedula['fecNac'].value(),
+            sexo=regcedula['sexo'].value()
+        )
+        datos_persona.save()
+
+        contacto_persona = PERSONA_CONTACTO(
+            telLocal=regcedula['telLocal'].value(),
+            telCelular=regcedula['telCel'].value(),
+            email=regcedula['email'].value()
+        )
+        contacto_persona.save()
+
+        domicilio_persona = PERSONA_DOMICILIO(
+            id_localidad=CAT_LOCALIDAD.objects.get(pk=int(regcedula['localidad'].value())),
+            vialidad=regcedula['vialidad'].value(),
+            numExterior=regcedula['numExterior'].value(),
+            numInterior=regcedula['numInterior'].value(),
+            codpost=regcedula['codpost'].value(),
+            referencia=regcedula['referencia'].value()
+        )
+        domicilio_persona.save()
+
+        persona_info = INFO_PERSONA(
+            idPadron=CAT_PADRONES.objects.get(pk=int(regcedula['idcatpadron'].value())),
+            idPersona='',
+            idDatos=PERSONA_DATOS.objects.get(pk=int(datos_persona.pk)),
+            idContacto=PERSONA_CONTACTO.objects.get(pk=int(contacto_persona.pk)),
+            iddomicilio=PERSONA_DOMICILIO.objects.get(pk=int(domicilio_persona.pk)),
+        )
+        persona_info.save()
+        print 'persona_info.pk --> %s'%(persona_info.pk)
+
+    else:
+        print 'EL FORMULARIO NO CONTENIA DATOS'
+
+    return int(persona_info.pk)
+
+
 def BusquedaXNombre(cdbusqueda):
     resultado = ''
     busqueda = str(cdbusqueda)
 
-    queryset = ProgCorazonAmigo.objects.using('corazon_amigo').values('folio').\
-        annotate(nomCompleto=Concat('nombre', V(' '), 'appaterno', V(' '),'apmaterno', output_field=CharField()))
+    rawquery = "select r.FOLIO, r.NOMBRE || ' ' || r.APPATERNO || ' ' || r.APMATERNO as NombreCompleto from PROG_CORAZON_AMIGO r"
+
+    queryset = ProgCorazonAmigo.objects.using('corazon_amigo').raw(rawquery)
+
+    for i in queryset:
+        print (i.folio, i.nombrecompleto)
+
     # resbusqueda = ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=cdbusqueda)
 
     # author = Author.objects.annotate(screen_name = Concat('name', V(' ('), 'goes_by', V(')'), output_field = CharField())).get()
 
-    print queryset
+    #print queryset
 
-    return True#resultado
+    return True #resultado
 
 
+# Inician vistas para navegaciòn del sistema
+@login_required()
 def home(request):
     cdbusqueda=''
     cdfiltro=''
@@ -242,103 +339,7 @@ def home(request):
     return render(request, 'sica_home.html', userdata)
 
 
-def cambiaMunicipio(request):
-
-    if request.method == 'GET':
-        #print 'menso'
-        #print request.GET
-        #print 'toy aqui'
-        post_text = request.GET.get('the_post')
-        #print 'post_text -> %s'% post_text
-        actmunicipio = list(CAT_MUNICIPIO.objects.filter(idEstado__idEstado=post_text))
-        #print actmunicipio
-        #data = serializers.serialize("json", actmunicipio, fields=('id', 'nomMunicipio'))
-        data = serializers.serialize("json", actmunicipio )
-        #print 'data  -> %s' % data
-
-        #actmunicipio = CAT_MUNICIPIO.objects.all().values()
-        return HttpResponse(data,content_type='application/json')
-
-    else:
-        return HttpResponse(
-            json.dumps({"nothing to see": "this isn't happening"}),
-            content_type="application/json"
-        )
-
-
-def cambiaLocalidad(request):
-
-    if request.method == 'GET':
-        #print 'menso'
-        #print request.GET
-        #print 'toy aqui'
-        post_text = request.GET.get('the_post')
-        #print 'post_text -> %s'% post_text
-        edo_actual= request.GET.get('estado_actual')
-        #print edo_actual
-        #listamunicipio = list(CAT_MUNICIPIO.objects.filter(idEstado__idEstado=post_text))
-
-        #actlocalidad = list(CAT_LOCALIDAD.objects.filter(idMunicipio__idmunicipio=post_text, idMunicipio__idEstado__idEstado=edo_actual ))
-        actlocalidad = list(CAT_LOCALIDAD.objects.filter(idMunicipio=post_text,
-                                                         idMunicipio__idEstado__idEstado=edo_actual))
-        #print actlocalidad
-        data = serializers.serialize("json", actlocalidad,fields=('pk','nomLocalidad'))
-        #print 'data  -> %s' % data
-
-        #actmunicipio = CAT_MUNICIPIO.objects.all().values()
-        return HttpResponse(data,content_type='application/json')
-
-    else:
-        return HttpResponse(
-            json.dumps({"nothing to see": "this isn't happening"}),
-            content_type="application/json"
-        )
-
-
-def guardaRegistroPersona( regcedula = None ):
-    if regcedula:
-        datos_persona = PERSONA_DATOS(
-            nombre=regcedula['nombre'].value(),
-            primApellido=regcedula['primApellido'].value(),
-            segApellido=regcedula['segApellido'].value(),
-            fecNac=regcedula['fecNac'].value(),
-            sexo=regcedula['sexo'].value()
-        )
-        datos_persona.save()
-
-        contacto_persona = PERSONA_CONTACTO(
-            telLocal=regcedula['telLocal'].value(),
-            telCelular=regcedula['telCel'].value(),
-            email=regcedula['email'].value()
-        )
-        contacto_persona.save()
-
-        domicilio_persona = PERSONA_DOMICILIO(
-            id_localidad=CAT_LOCALIDAD.objects.get(pk=int(regcedula['localidad'].value())),
-            vialidad=regcedula['vialidad'].value(),
-            numExterior=regcedula['numExterior'].value(),
-            numInterior=regcedula['numInterior'].value(),
-            codpost=regcedula['codpost'].value(),
-            referencia=regcedula['referencia'].value()
-        )
-        domicilio_persona.save()
-
-        persona_info = INFO_PERSONA(
-            idPadron=CAT_PADRONES.objects.get(pk=int(regcedula['idcatpadron'].value())),
-            idPersona='',
-            idDatos=PERSONA_DATOS.objects.get(pk=int(datos_persona.pk)),
-            idContacto=PERSONA_CONTACTO.objects.get(pk=int(contacto_persona.pk)),
-            iddomicilio=PERSONA_DOMICILIO.objects.get(pk=int(domicilio_persona.pk)),
-        )
-        persona_info.save()
-        print 'persona_info.pk --> %s'%(persona_info.pk)
-
-    else:
-        print 'EL FORMULARIO NO CONTENIA DATOS'
-
-    return int(persona_info.pk)
-
-
+@login_required()
 def crearcedula(request, paso=''):
     datousuario = ''
     userdata = {}
