@@ -173,7 +173,7 @@ def BusquedaXNombre(cdbusqueda):
     resultado = ''
     busqueda = smart_text(cdbusqueda, encoding='utf-8', strings_only=False, errors='strict')
 
-    rawquery = "select r.FOLIO, r.VERSIONCA, r.TXTSOLMUNICIPIO, r.REP_SEXO, " \
+    rawquery = "select r.FOLIO, r.VERSIONCA, r.TXTSOLMUNICIPIO, r.REP_SEXO, r.STATUS, " \
                "r.FECREG, r.NOMBRE, r.APPATERNO, r.APMATERNO from PROG_CORAZON_AMIGO r " \
                "where r.NOMBRE || ' ' || r.APPATERNO || ' ' || r.APMATERNO " \
                "LIKE '%%"+busqueda.upper()+"%%'"
@@ -182,7 +182,7 @@ def BusquedaXNombre(cdbusqueda):
         raw(smart_text(rawquery, encoding='utf-8', strings_only=False, errors='strict'))
 
     for i in queryset:
-        print (i.folio, smart_text(i.nombre, encoding='utf-8', strings_only=False, errors='strict'),
+        print (i.folio, i.status, smart_text(i.nombre, encoding='utf-8', strings_only=False, errors='strict'),
               smart_text(i.appaterno, encoding='utf-8', strings_only=False, errors='strict'),
               smart_text(i.apmaterno, encoding='utf-8', strings_only=False, errors='strict'))
 
