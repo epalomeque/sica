@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
+from django.utils.encoding import smart_text, force_text, smart_bytes
 from django.db.models import CharField, Value as V
 from django.db.models.functions import Concat
 from django.core.serializers.json import DjangoJSONEncoder
@@ -170,22 +171,22 @@ def guardaRegistroPersona( regcedula = None ):
 
 def BusquedaXNombre(cdbusqueda):
     resultado = ''
-    busqueda = str(cdbusqueda)
+    busqueda = smart_text(cdbusqueda, encoding='utf-8', strings_only=False, errors='strict')
 
-    rawquery = "select r.FOLIO, r.NOMBRE || ' ' || r.APPATERNO || ' ' || r.APMATERNO as NombreCompleto from PROG_CORAZON_AMIGO r"
+    rawquery = "select r.FOLIO, r.VERSIONCA, r.TXTSOLMUNICIPIO, r.REP_SEXO, " \
+               "r.FECREG, r.NOMBRE, r.APPATERNO, r.APMATERNO from PROG_CORAZON_AMIGO r " \
+               "where r.NOMBRE || ' ' || r.APPATERNO || ' ' || r.APMATERNO " \
+               "LIKE '%%"+busqueda.upper()+"%%'"
 
-    queryset = ProgCorazonAmigo.objects.using('corazon_amigo').raw(rawquery)
+    queryset = ProgCorazonAmigo.objects.using('corazon_amigo').\
+        raw(smart_text(rawquery, encoding='utf-8', strings_only=False, errors='strict'))
 
     for i in queryset:
-        print (i.folio, i.nombrecompleto)
+        print (i.folio, smart_text(i.nombre, encoding='utf-8', strings_only=False, errors='strict'),
+              smart_text(i.appaterno, encoding='utf-8', strings_only=False, errors='strict'),
+              smart_text(i.apmaterno, encoding='utf-8', strings_only=False, errors='strict'))
 
-    # resbusqueda = ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=cdbusqueda)
-
-    # author = Author.objects.annotate(screen_name = Concat('name', V(' ('), 'goes_by', V(')'), output_field = CharField())).get()
-
-    #print queryset
-
-    return True #resultado
+    return queryset
 
 
 # Inician vistas para navegaciòn del sistema
@@ -207,9 +208,7 @@ def home(request):
         if 'busq' in request.POST:
             # print 'entre busqueda gil'
             busqueda = Busquedaform(request.POST,prefix='busq')
-            # cedulaForms = cedulaforms(prefix='cedula',
-            #                           initial={'ulevantamiento':request.user, 'fechCreacion':date.today(), 'estatus':1})
-            #print cedulaForms
+
             elGET = True
 
             if busqueda.is_valid():
@@ -304,9 +303,7 @@ def home(request):
 
                 # Busqueda por nombre del demandante
                 elif cdfiltro == '1':
-                    # resbusqueda = BusquedaXNombre(cdbusqueda)
-                    BusquedaXNombre(cdbusqueda)
-                    # ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=cdbusqueda)
+                    resbusqueda = BusquedaXNombre(cdbusqueda)
 
 
         elif 'cedula' in request.POST:
@@ -329,12 +326,12 @@ def home(request):
         'datos_busq': datos_busq,
         # 'cedulaForms': cedulaForms,
         'elGET': elGET,
-        'DPN':datospersonaNoexiste(),
-        'DPE':datospersonaExiste(),
-        'sinregistro':nohayregistro
+        'DPN': datospersonaNoexiste(),
+        'DPE': datospersonaExiste(),
+        'sinregistro': nohayregistro
     }
 
-    print userdata
+    # print userdata
 
     return render(request, 'sica_home.html', userdata)
 

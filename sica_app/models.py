@@ -1,5 +1,9 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.encoding import smart_text, force_text, smart_bytes
+from django.utils.encoding import python_2_unicode_compatible
+
 
 # Create your models here.
 class CAT_PADRONES(models.Model):
@@ -258,3 +262,6 @@ class ProgCorazonAmigo(models.Model):
     class Meta:
         managed = False
         db_table = 'prog_corazon_amigo'
+
+    def __unicode__(self):              # __unicode__ on Python 2
+        return self.progcorazonamigo_text
