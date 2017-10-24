@@ -15,20 +15,20 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.views import login, logout
-from sica_app.views import home
-from sica_app.views import vistaformularios
-from sica_app.views import cambiaMunicipio
-from sica_app.views import cambiaLocalidad
-from sica_app.views import crearcedula
+from sica_app.views import home, vistaformularios, cambiaMunicipio, cambiaLocalidad, viewCedula, \
+    viewBuscar, viewRegistro
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', login, {'template_name': 'login.html'}, name='login'),
     url(r'^home$', home, name='home'),
     url(r'^logout$', logout, {'next_page': '/'}, name='logout'),
+    url(r'^buscar$', viewBuscar, name='urlBuscar'),
+    # url(r'^buscar/(?P<busqueda>[\w\-]+)/$', buscar, name='buscar'),
     url(r'^formularios$', vistaformularios, name='Formularios '),
     url(r'^datosmunicipio', cambiaMunicipio, name='cambiaMunicipio '),
     url(r'^datoslocalidad', cambiaLocalidad, name='cambiaLocalidad '),
-    url(r'^crearcedula/(?P<paso>[0-9])/$', crearcedula, name='crearcedula'),
-    url(r'^crearcedula', crearcedula, name='crearcedula '),
+    url(r'^cedula', viewCedula, name='urlCedula'),
+    #url(r'^cedula/(?P<paso>[0-9])/$', crearcedula, name='crearcedula'),
+    url(r'^registro/(?P<padron>[0-9])/(?P<folio>[0-9]+)/$', viewRegistro, name='urlregistro'),
 ]

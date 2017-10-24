@@ -13,7 +13,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from models import ProgCorazonAmigo, CAT_ESTADO, CAT_MUNICIPIO,CAT_LOCALIDAD, PERSONA_DOMICILIO, PERSONA_CONTACTO, \
                     PERSONA_DATOS, INFO_PERSONA, CAT_PADRONES, CEDULA
 from forms import Busquedaform, cedulaforms, datospersonaExiste, datospersonaNoexiste, FormEstado, FormMunicipio, \
-                    FormLocalidad
+                    FormLocalidad, formBuscar
 
 
 # Create your views here.
@@ -169,175 +169,262 @@ def guardaRegistroPersona( regcedula = None ):
     return int(persona_info.pk)
 
 
-def BusquedaXNombre(cdbusqueda):
-    resultado = ''
+def buscaFolioCorazonAmigo(folio):
+    resbusqueda = ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=folio)
+    if resbusqueda:
+        return resbusqueda
+    else:
+        return False
+
+
+def buscaFolioCedulaAtencion(folio):
+    return False
+
+
+def busquedaXNombreCA(cdbusqueda):
     busqueda = smart_text(cdbusqueda, encoding='utf-8', strings_only=False, errors='strict')
+    print busqueda
 
     rawquery = "select r.FOLIO, r.VERSIONCA, r.TXTSOLMUNICIPIO, r.REP_SEXO, r.STATUS, " \
                "r.FECREG, r.NOMBRE, r.APPATERNO, r.APMATERNO from PROG_CORAZON_AMIGO r " \
-               "where r.NOMBRE || ' ' || r.APPATERNO || ' ' || r.APMATERNO " \
-               "LIKE '%%"+busqueda.upper()+"%%'"
+               "where r.NOMBRE || ' ' || r.APPATERNO || ' ' || r.APMATERNO LIKE '%"+busqueda.upper()+"%' " \
+               "order by r.STATUS, r.APPATERNO"
+
+    print rawquery
 
     queryset = ProgCorazonAmigo.objects.using('corazon_amigo').\
         raw(smart_text(rawquery, encoding='utf-8', strings_only=False, errors='strict'))
 
+    c = 0
     for i in queryset:
-        print (i.folio, i.status, smart_text(i.nombre, encoding='utf-8', strings_only=False, errors='strict'),
-              smart_text(i.appaterno, encoding='utf-8', strings_only=False, errors='strict'),
-              smart_text(i.apmaterno, encoding='utf-8', strings_only=False, errors='strict'))
+        c+=1
 
-    return queryset
+    if c > 0:
+        return queryset
+    else:
+        return False
+
+
+def busquedaXNombreCdA(busqueda):
+    return False
+
+
+def vistaformularios(request):
+    userdata = {
+        'usuario': request.user,
+        'CatEstado': FormEstado,
+        'CatMunicipio':FormMunicipio,
+        'Catlocalidad':FormLocalidad
+    }
+
+
+
+    return render(request, 'formularios.html',userdata)
 
 
 # Inician vistas para navegaciòn del sistema
 @login_required()
-def home(request):
-    cdbusqueda=''
-    cdfiltro=''
-    resbusqueda=''
-    datos_busq={}
+def viewBuscar(request):
+    fBuscar = ''
     busqueda = ''
-    cedulaForms = ''
-    elGET = ''
-    nohayregistro = False
+    resultadoCA = ''
+    resultadoCdA = ''
+    countresultadosCA = 0
+    countresultadosCdA = 0
 
-    # Valida el metodo de la peticion (POST o GET)
     if request.method == 'POST':
+        fBuscar = formBuscar(request.POST, prefix='busq')
+        if fBuscar.is_valid():
+            busqueda = fBuscar['busqueda'].value()
 
-        # Valida que el formulario haya sido enviado
-        if 'busq' in request.POST:
-            # print 'entre busqueda gil'
-            busqueda = Busquedaform(request.POST,prefix='busq')
+    # La busqueda a realizar es por folio de padron o folio de cedula
+    if busqueda.isdigit():
+        resultadoCA = buscaFolioCorazonAmigo(busqueda)
+        if resultadoCA:
+            countresultadosCA = len(resultadoCA)
+        resultadoCdA = buscaFolioCedulaAtencion(busqueda)
+        if resultadoCdA:
+            countresultadosCdA = len(resultadoCdA)
 
-            elGET = True
-
-            if busqueda.is_valid():
-                cdbusqueda = busqueda['CD_busqueda'].value()
-                cdfiltro = busqueda['CD_filtro'].value()
-
-                # Busqueda en blanco
-                if cdfiltro == '4':
-                    print 'Filtro 4 | Ninguna busqueda'
-                    resbusqueda = ''
-
-                # Busqueda por folio de padron
-                if cdfiltro == '3':
-                    resbusqueda = ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=cdbusqueda)
-                    #print len(resbusqueda)
-                    if len(resbusqueda) >0:
-                        for registro in resbusqueda:
-
-                            datos_busq = {
-                                'folio': {'valor': validarNone(registro.folio),
-                                          'etiqueta': 'Folio:'},
-                                'appaterno': {'valor': validarNone(registro.appaterno),
-                                              'etiqueta': 'Apellido Paterno: '},
-                                'apmaterno': {'valor': validarNone(registro.apmaterno),
-                                              'etiqueta': 'Apellido Materno: '},
-                                'nombre': {'valor': validarNone(registro.nombre),
-                                           'etiqueta': 'Nombre: '},
-                                'sexo': {'valor': validarNone(sexo2text(registro.sexo)),
-                                         'etiqueta': 'Sexo: '},
-                                'tel': {'valor': validarNone(registro.tel),
-                                        'etiqueta': 'Teléfono: '},
-                                'cvelocal': {'valor': validarNone(registro.cvelocal),
-                                             'etiqueta': 'Localidad: '},
-                                'calleynum': {'valor': validarNone(registro.calleynum),
-                                              'etiqueta': 'Calle y número: '},
-                                'etapa': {'valor': validarNone(registro.etapa),
-                                          'etiqueta': 'Etapa: '},
-                                'curp': {'valor': validarNone(registro.curp),
-                                          'etiqueta': 'CURP: '},
-                                'fecnac': {'valor': validarNone(registro.fecnac),
-                                          'etiqueta': 'Fecha de Nacimiento: '},
-                                'rep_appaterno': {'valor': validarNone(registro.rep_appaterno),
-                                                  'etiqueta': 'Apellido Paterno: '},
-                                'rep_apmaterno': {'valor': validarNone(registro.rep_apmaterno),
-                                                  'etiqueta': 'Apellido Materno: '},
-                                'rep_nombre': {'valor': validarNone(registro.rep_nombre),
-                                               'etiqueta': 'Nombre: '},
-                                'rep_sexo': {'valor': validarNone(sexo2text(registro.rep_sexo)),
-                                             'etiqueta': 'Sexo: '},
-                                'rep_fecnac': {'valor': validarNone(registro.rep_fecnac),
-                                               'etiqueta': 'Fecha de Nacimiento:'},
-                                'rep_tel': {'valor': validarNone(registro.rep_tel),
-                                            'etiqueta': 'Teléfono: '},
-                                'rep_municipio': {'valor': validarNone(registro.rep_municipio),
-                                                  'etiqueta': 'Municipio: '},
-                                'rep_cvelocal': {'valor': validarNone(registro.rep_cvelocal),
-                                                 'etiqueta': 'Localidad: '},
-                                'rep_calleynum': {'valor': validarNone(registro.rep_calleynum),
-                                                  'etiqueta': 'Calle y número: '},
-                                'txtsolmunicipio': {'valor': validarNone(registro.txtsolmunicipio),
-                                                    'etiqueta': 'Municipio: '},
-                                'txtsollocalidad': {'valor': validarNone(registro.txtsollocalidad),
-                                                    'etiqueta': 'Localidad: '},
-                                'txtrepmunicipio': {'valor': validarNone(registro.txtrepmunicipio),
-                                                    'etiqueta': 'Municpio: '},
-                                'txtreplocalidad': {'valor': validarNone(registro.txtreplocalidad),
-                                                    'etiqueta': 'Localidad: '},
-                                'acomentario': {'valor': validarNone(registro.acomentario),
-                                                'etiqueta': 'Comentario: '},
-                                'paquete': {'valor': validarNone(registro.paquete),
-                                            'etiqueta': 'Paquete: '},
-                                'status': {'valor': validarNone(status2txt(registro.status)),
-                                           'etiqueta': 'Estatus'},
-                                'anio': {'valor': validarNone(anio2txtanio(registro.versionca)),
-                                         'etiqueta': 'Versión C.A'},
-                            }
-
-                    else: 
-                        nohayregistro=True
-
-                # Busqueda por folio de cedula
-                elif cdfiltro == '2':
-                    resbusqueda = CEDULA.objects.filter(pk=cdbusqueda)
-
-                    if len(resbusqueda) >0:
-                        print 'Si hay registros'
-                        for registro in resbusqueda:
-                            datos_busq = registro
-                    else:
-                        print 'No hay registros'
-                        nohayregistro=True
-
-                # Busqueda por nombre del demandante
-                elif cdfiltro == '1':
-                    resbusqueda = BusquedaXNombre(cdbusqueda)
-
-
-        elif 'cedula' in request.POST:
-            elGET = True
-            cedulaForms = cedulaforms(request.POST, prefix='cedula')
-
-
-    elif request.method == 'GET':
-        busqueda = Busquedaform(prefix='busq')
-
+    # La busqueda a realizar es por nombre del beneficiario o curp
     else:
-        print 'Ni post ni get'
+        resultadoCA = busquedaXNombreCA(busqueda.upper())
+        if resultadoCA:
+            for i in resultadoCA:
+                countresultadosCA += 1
+        resultadoCdA = busquedaXNombreCdA(busqueda.upper())
+        if resultadoCdA:
+            countresultadosCdA = len(resultadoCdA)
 
     userdata = {
-        'usuario':request.user,
-        'busquedaForms': busqueda,
-        'cdbusqueda': cdbusqueda,
-        'cdfiltro': cdfiltro,
-        'resbusqueda': resbusqueda,
-        'datos_busq': datos_busq,
+        'usuario': request.user,
+        'fBuscar': fBuscar,
+        'busqueda': smart_text(busqueda.upper()),
+        'resultadoCdA': resultadoCdA,
+        'resultadoCA': resultadoCA,
+        'countresultadosCA': countresultadosCA,
+        'countresultadosCdA': countresultadosCdA
+    }
+
+    return render(request, 'buscar.html', userdata)
+
+
+@login_required()
+def home(request):
+    # cdbusqueda=''
+    # cdfiltro=''
+    # resbusqueda=''
+    # datos_busq={}
+    # busqueda = ''
+    # cedulaForms = ''
+    # elGET = ''
+    # nohayregistro = False
+    fBuscar = formBuscar(prefix='busq')
+
+    ## Valida el metodo de la peticion (POST o GET)
+    # if request.method == 'POST':
+    #
+    #     # Valida que el formulario haya sido enviado
+    #     if 'busq' in request.POST:
+    #         # print 'entre busqueda gil'
+    #         busqueda = formBuscar(request.POST,prefix='busq')
+    #
+    #         elGET = True
+    #
+    #         if busqueda.is_valid():
+    #             cdbusqueda = busqueda['CD_busqueda'].value()
+    #             cdfiltro = busqueda['CD_filtro'].value()
+    #
+    #             # Busqueda en blanco
+    #             if cdfiltro == '4':
+    #                 print 'Filtro 4 | Ninguna busqueda'
+    #                 resbusqueda = ''
+    #
+    #             # Busqueda por folio de padron
+    #             if cdfiltro == '3':
+    #                 resbusqueda = ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=cdbusqueda)
+    #                 #print len(resbusqueda)
+    #                 if len(resbusqueda) >0:
+    #                     for registro in resbusqueda:
+    #
+    #                         datos_busq = {
+    #                             'folio': {'valor': validarNone(registro.folio),
+    #                                       'etiqueta': 'Folio:'},
+    #                             'appaterno': {'valor': validarNone(registro.appaterno),
+    #                                           'etiqueta': 'Apellido Paterno: '},
+    #                             'apmaterno': {'valor': validarNone(registro.apmaterno),
+    #                                           'etiqueta': 'Apellido Materno: '},
+    #                             'nombre': {'valor': validarNone(registro.nombre),
+    #                                        'etiqueta': 'Nombre: '},
+    #                             'sexo': {'valor': validarNone(sexo2text(registro.sexo)),
+    #                                      'etiqueta': 'Sexo: '},
+    #                             'tel': {'valor': validarNone(registro.tel),
+    #                                     'etiqueta': 'Teléfono: '},
+    #                             'cvelocal': {'valor': validarNone(registro.cvelocal),
+    #                                          'etiqueta': 'Localidad: '},
+    #                             'calleynum': {'valor': validarNone(registro.calleynum),
+    #                                           'etiqueta': 'Calle y número: '},
+    #                             'etapa': {'valor': validarNone(registro.etapa),
+    #                                       'etiqueta': 'Etapa: '},
+    #                             'curp': {'valor': validarNone(registro.curp),
+    #                                       'etiqueta': 'CURP: '},
+    #                             'fecnac': {'valor': validarNone(registro.fecnac),
+    #                                       'etiqueta': 'Fecha de Nacimiento: '},
+    #                             'rep_appaterno': {'valor': validarNone(registro.rep_appaterno),
+    #                                               'etiqueta': 'Apellido Paterno: '},
+    #                             'rep_apmaterno': {'valor': validarNone(registro.rep_apmaterno),
+    #                                               'etiqueta': 'Apellido Materno: '},
+    #                             'rep_nombre': {'valor': validarNone(registro.rep_nombre),
+    #                                            'etiqueta': 'Nombre: '},
+    #                             'rep_sexo': {'valor': validarNone(sexo2text(registro.rep_sexo)),
+    #                                          'etiqueta': 'Sexo: '},
+    #                             'rep_fecnac': {'valor': validarNone(registro.rep_fecnac),
+    #                                            'etiqueta': 'Fecha de Nacimiento:'},
+    #                             'rep_tel': {'valor': validarNone(registro.rep_tel),
+    #                                         'etiqueta': 'Teléfono: '},
+    #                             'rep_municipio': {'valor': validarNone(registro.rep_municipio),
+    #                                               'etiqueta': 'Municipio: '},
+    #                             'rep_cvelocal': {'valor': validarNone(registro.rep_cvelocal),
+    #                                              'etiqueta': 'Localidad: '},
+    #                             'rep_calleynum': {'valor': validarNone(registro.rep_calleynum),
+    #                                               'etiqueta': 'Calle y número: '},
+    #                             'txtsolmunicipio': {'valor': validarNone(registro.txtsolmunicipio),
+    #                                                 'etiqueta': 'Municipio: '},
+    #                             'txtsollocalidad': {'valor': validarNone(registro.txtsollocalidad),
+    #                                                 'etiqueta': 'Localidad: '},
+    #                             'txtrepmunicipio': {'valor': validarNone(registro.txtrepmunicipio),
+    #                                                 'etiqueta': 'Municpio: '},
+    #                             'txtreplocalidad': {'valor': validarNone(registro.txtreplocalidad),
+    #                                                 'etiqueta': 'Localidad: '},
+    #                             'acomentario': {'valor': validarNone(registro.acomentario),
+    #                                             'etiqueta': 'Comentario: '},
+    #                             'paquete': {'valor': validarNone(registro.paquete),
+    #                                         'etiqueta': 'Paquete: '},
+    #                             'status': {'valor': validarNone(status2txt(registro.status)),
+    #                                        'etiqueta': 'Estatus'},
+    #                             'anio': {'valor': validarNone(anio2txtanio(registro.versionca)),
+    #                                      'etiqueta': 'Versión C.A'},
+    #                         }
+    #
+    #                 else:
+    #                     nohayregistro=True
+    #
+    #             # Busqueda por folio de cedula
+    #             elif cdfiltro == '2':
+    #                 resbusqueda = CEDULA.objects.filter(pk=cdbusqueda)
+    #
+    #                 if len(resbusqueda) >0:
+    #                     print 'Si hay registros'
+    #                     for registro in resbusqueda:
+    #                         datos_busq = registro
+    #                 else:
+    #                     print 'No hay registros'
+    #                     nohayregistro=True
+    #
+    #             # Busqueda por nombre del demandante
+    #             elif cdfiltro == '1':
+    #                 resbusqueda = BusquedaXNombre(cdbusqueda)
+    #
+    #                 for i in resbusqueda:
+    #                     print (
+    #                     i.folio, i.status, smart_text(i.nombre, encoding='utf-8', strings_only=False, errors='strict'),
+    #                     smart_text(i.appaterno, encoding='utf-8', strings_only=False, errors='strict'),
+    #                     smart_text(i.apmaterno, encoding='utf-8', strings_only=False, errors='strict'))
+    #
+    #
+    #     elif 'cedula' in request.POST:
+    #         elGET = True
+    #         cedulaForms = cedulaforms(request.POST, prefix='cedula')
+    #
+    #
+    # elif request.method == 'GET':
+    #     busqueda = formBuscar(prefix='busq')
+    #
+    # else:
+    #     print 'Ni post ni get'
+    ##
+
+    userdata = {
+        'usuario': request.user,
+        'fBuscar': fBuscar,
+        # 'cdbusqueda': cdbusqueda,
+        # 'cdfiltro': cdfiltro,
+        # 'resbusqueda': resbusqueda,
+        # 'datos_busq': datos_busq,
         # 'cedulaForms': cedulaForms,
-        'elGET': elGET,
-        'DPN': datospersonaNoexiste(),
-        'DPE': datospersonaExiste(),
-        'sinregistro': nohayregistro
+        # 'elGET': elGET,
+        # 'DPN': datospersonaNoexiste(),
+        # 'DPE': datospersonaExiste(),
+        # 'sinregistro': nohayregistro
     }
 
     # print userdata
 
-    return render(request, 'sica_home.html', userdata)
+    return render(request, 'home.html', userdata)
 
 
 @login_required()
-def crearcedula(request, paso=''):
+def viewCedula(request, paso=''):
     datousuario = ''
     userdata = {}
     if not paso:
@@ -402,14 +489,12 @@ def crearcedula(request, paso=''):
     return render(request, 'crearcedula.html', userdata)
 
 
-def vistaformularios(request):
-    userdata = {
-        'usuario': request.user,
-        'CatEstado': FormEstado,
-        'CatMunicipio':FormMunicipio,
-        'Catlocalidad':FormLocalidad
-    }
+@login_required()
+def viewRegistro(request, padron, folio):
+    print padron
+    print folio
+    registro = ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=folio)
 
+    print registro[0].folio, registro[0].nombre, registro[0].appaterno, registro[0].apmaterno
 
-
-    return render(request, 'formularios.html',userdata)
+    return True

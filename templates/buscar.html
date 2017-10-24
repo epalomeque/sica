@@ -1,0 +1,43 @@
+{% extends '_base.html' %}
+{% block settingsbox %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
+
+{% block buscador %}
+<br />
+    {% include "template_buscador.html" %}
+<br />
+{% endblock%}
+
+{% block content %}
+
+    {% if countresultadosCA > 0  %}
+        <hr />
+        <h4>Se encontraron {{ countresultadosCA }} resultados para la búsqueda: "{{busqueda}}" en el padrón de Corazón Amigo</h4>
+        <ul>
+        {% for registro in resultadoCA %}
+            <li>
+                {{ registro.folio }}, {{ registro.nombre }} {{ registro.appaterno }} {{ registro.apmaterno }}, {{registro.txtsolmunicipio }}, {{ registro.status }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <hr />
+        <h4>No se encontraron coincidencias para "{{busqueda}}" en el padrón de Corazón Amigo</h4>
+    {% endif %}
+
+
+    {% if countresultadoCdA > 0%}
+        <hr />
+        <h4>Se encontraron {{ countresultadoCdA }} coincidencias para la búsqueda: "{{busqueda}}" en el registro de las Cédulas de Atención</h4>
+    {% else %}
+        <hr />
+        <h4>No se encontraron coincidencias para la búsqueda: "{{busqueda}}" en los registos de Cédulas de Atención</h4>
+    {% endif %}
+
+<br />
+    {% include "template_crearcedula.html" %}
+<br />
+
+{%endblock%}

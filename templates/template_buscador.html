@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-sm-2"></div>
+    <form action="{% url 'urlBuscar' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+            <div class="row">
+                <div class="col align-self-center col-sm-8">
+                {{ fBuscar.errors }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-7">
+                {{ fBuscar.busqueda }}
+                </div>
+                <div class="col-sm-1">
+                <input id="boton_buscar" type="submit" name="{{busquedaForms.prefix}}" value="Buscar" class="btn btn-app btn-success radius-4 align-center">
+                </div>
+                </input>
+            </div>
+
+    </form>
+    <div class="col-sm-2"></div>
+</div>

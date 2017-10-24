@@ -12,6 +12,15 @@ FILTROBUSQUEDA = {
     (4, '-----'),(3,'Folio de Padrón'),(2,'Folio de Cedula'),(1,'Nombre del Demandante')
 }
 
+
+class formBuscar(forms.Form):
+    busqueda = forms.CharField(
+        label='Busqueda',
+        widget=forms.TextInput(attrs={'placeholder': 'Realiza tu búsqueda por medio del folio de padrón, '\
+                                                     'folio de cédula de atención o nombre del beneficiario'})
+    )
+
+
 class Busquedaform(forms.Form):
     CD_filtro = forms.ChoiceField(
         choices=FILTROBUSQUEDA,
