@@ -1,0 +1,125 @@
+<div class="row">
+    <!-- Caja de datos del beneficiario -->
+    <div class="col-sm-12 widget-container-col ui-sortable">
+
+    <div class="widget-box ui-sortable-handle">
+
+        <div class="widget-header">
+            <h5 class="widget-title"><strong>BENEFICIARIO - </strong>
+                {{datos_busq.folio.etiqueta}} <strong style="color:black;">{{datos_busq.folio.valor}}</strong>
+                | {{datos_busq.nombre.etiqueta}}<strong style="color:black;"> {{datos_busq.appaterno.valor}} {{datos_busq.apmaterno.valor}}, {{datos_busq.nombre.valor}}</strong>
+            </h5>
+
+            <!-- #section:custom/widget-box.toolbar -->
+            <div class="widget-toolbar">
+                <a href="#" data-action="collapse">
+                    <i class="ace-icon fa fa-chevron-up"></i>
+                </a>
+            </div>
+
+            <!-- /section:custom/widget-box.toolbar -->
+        </div>
+
+        <div class="widget-body">
+
+            <div class="widget-main col-sm-12">
+
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.txtsolmunicipio.etiqueta}}<br /><strong style="color: black;">{{datos_busq.txtsolmunicipio.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.cvelocal.etiqueta}}<br /><strong style="color: black;">{{datos_busq.txtsollocalidad.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.calleynum.etiqueta}}<br /><strong style="color: black;">{{datos_busq.calleynum.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.status.etiqueta}}<br /><strong style="color: black;">{{datos_busq.status.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.acomentario.etiqueta}}<br /><strong style="color: black;">{{datos_busq.acomentario.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.etapa.etiqueta}}<br /><strong style="color: black;">{{datos_busq.etapa.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.paquete.etiqueta}}<br /><strong style="color: black;">{{datos_busq.paquete.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.anio.etiqueta}}<br /><strong style="color: black;">{{datos_busq.anio.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.tel.etiqueta}}<br /><strong style="color: black;">{{datos_busq.tel.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.sexo.etiqueta}}<br /><strong style="color: black;">{{datos_busq.sexo.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.fecnac.etiqueta}}<br /><strong style="color: black;">{{datos_busq.fecnac.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.curp.etiqueta}} {% if datos_busq.curp.error %}{{datos_busq.curp.error}}{% endif %}<br /><strong style="color: black;">{{datos_busq.curp.valor}}</strong>
+            </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- Caja de datos del representante -->
+    <div class="col-sm-12 widget-container-col ui-sortable">
+
+    <div class="widget-box ui-sortable-handle">
+
+        <div class="widget-header">
+            <h5 class="widget-title"><strong>REPRESENTANTE - </strong>
+                {{datos_busq.rep_nombre.etiqueta}}<strong style="color:black;"> {{datos_busq.rep_appaterno.valor}} {{datos_busq.rep_apmaterno.valor}}, {{datos_busq.rep_nombre.valor}}</strong>
+            </h5>
+
+            <!-- #section:custom/widget-box.toolbar -->
+            <div class="widget-toolbar">
+                <a href="#" data-action="collapse">
+                    <i class="ace-icon fa fa-chevron-up"></i>
+                </a>
+
+            </div>
+
+            <!-- /section:custom/widget-box.toolbar -->
+        </div>
+
+        <div class="widget-body">
+
+            <div class="widget-main col-sm-12">
+
+
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.txtrepmunicipio.etiqueta}}<br /><strong style="color: black;">{{datos_busq.txtrepmunicipio.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.rep_cvelocal.etiqueta}}<br /><strong style="color: black;">{{datos_busq.txtreplocalidad.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.rep_calleynum.etiqueta}}<br /><strong style="color: black;">{{datos_busq.rep_calleynum.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.rep_tel.etiqueta}}<br /><strong style="color: black;">{{datos_busq.rep_tel.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.rep_sexo.etiqueta}}<br /><strong style="color: black;">{{datos_busq.rep_sexo.valor}}</strong>
+            </p>
+            <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                {{datos_busq.rep_fecnac.etiqueta}}<br /><strong style="color: black;">{{datos_busq.fecnac.valor}}</strong>
+            </p>
+
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</div>

@@ -19,7 +19,8 @@ from forms import Busquedaform, cedulaforms, datospersonaExiste, datospersonaNoe
 # Create your views here.
 def validarNone(valor) :
     valorFinal = ''
-    valor = str(valor)
+    # valor = str(valor)
+    valor = smart_text(valor, encoding='utf-8', strings_only=False, errors='strict')
 
     if valor == None or valor == 'None' or valor.strip() == '' or valor == '-1':
         valorFinal = 'Sin Información'
@@ -72,12 +73,38 @@ def sexo2text(sexo):
     sexo = str(sexo)
     txtsexo = ''
 
-    if sexo == 'F': # si es Femenino
-        txtsexo = 'Mujer'
-    elif sexo == 'M': # si es Masculino
-        txtsexo = 'Hombre'
+    if sexo.upper() == 'F': # si es Femenino
+        txtsexo = 'MUJER'
+    elif sexo.upper() == 'M': # si es Masculino
+        txtsexo = 'HOMBRE'
 
     return txtsexo
+
+
+def validaCURP(curp):
+    SiglasEntidad = {'AS', 'BC', 'BS', 'CC', 'CL', 'CM', 'CS', 'CH', 'DF', 'DG', 'GT', 'GR', 'HG', 'JC', 'MC', 'MN',
+                     'MS', 'NT', 'NL', 'OC', 'PL', 'QT', 'QR', 'SP', 'SL', 'SR', 'TC', 'TS', 'TL', 'VZ', 'YN', 'ZS',
+                     'EL', 'NE'}
+    SiglasGenero = {'H', 'M'}
+
+    regexCURP = ''
+
+
+    error = []
+
+    # 18 caracteres
+    # if len(trim(curp)) != 18:
+    #     error.append('e01. La longitud de la cadena no es correcta')
+    # Primeros cuatro caracteres
+    # elif :
+    # Caracteres 5 al 10
+    # Caracter de Genero 11
+    # Caracteres 12 al 13
+    # Caracteres 14 al 16
+    # else:
+    #     error = None
+
+    return None
 
 
 def cambiaMunicipio(request):
@@ -430,8 +457,10 @@ def viewCedula(request, paso=''):
     if not paso:
         paso = '1'
 
+    print '@' * 25
     print 'request.method --> %s '% request.method
     print 'paso --> %s | tipo --> %s'% (paso, type(paso))
+    print '@' * 25
 
     if request.method == 'GET':
         print '----- GET ----- y paso %s' % paso
@@ -440,6 +469,9 @@ def viewCedula(request, paso=''):
             'regcedula': datospersonaNoexiste(),
             'paso':paso
         }
+        print '*' * 25
+        print userdata
+        print '*' * 25
 
     elif request.method == 'POST':
         if paso == '2':
@@ -485,16 +517,86 @@ def viewCedula(request, paso=''):
                 'paso': paso
             }
 
-
     return render(request, 'crearcedula.html', userdata)
 
 
 @login_required()
 def viewRegistro(request, padron, folio):
-    print padron
-    print folio
-    registro = ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=folio)
+    fBuscar = formBuscar(prefix='busq')
 
-    print registro[0].folio, registro[0].nombre, registro[0].appaterno, registro[0].apmaterno
+    resbusqueda = ProgCorazonAmigo.objects.using('corazon_amigo').filter(folio=folio)
 
-    return True
+    # print registro[0].folio, registro[0].nombre, registro[0].appaterno, registro[0].apmaterno
+
+    if len(resbusqueda) >0:
+        for registro in resbusqueda:
+
+            datos_busq = {
+                'folio': {'valor': validarNone(registro.folio),
+                          'etiqueta': 'Folio:'},
+                'appaterno': {'valor': validarNone(registro.appaterno),
+                              'etiqueta': 'Apellido Paterno: '},
+                'apmaterno': {'valor': validarNone(registro.apmaterno),
+                              'etiqueta': 'Apellido Materno: '},
+                'nombre': {'valor': validarNone(registro.nombre),
+                           'etiqueta': 'Nombre: '},
+                'sexo': {'valor': validarNone(sexo2text(registro.sexo)),
+                         'etiqueta': 'Sexo: '},
+                'tel': {'valor': validarNone(registro.tel),
+                        'etiqueta': 'Teléfono: '},
+                'cvelocal': {'valor': validarNone(registro.cvelocal),
+                             'etiqueta': 'Localidad: '},
+                'calleynum': {'valor': validarNone(registro.calleynum),
+                              'etiqueta': 'Calle y número: '},
+                'etapa': {'valor': validarNone(registro.etapa),
+                          'etiqueta': 'Etapa: '},
+                'curp': {'valor': validarNone(registro.curp),
+                         #'error': validaCURP(registro.curp),
+                          'etiqueta': 'CURP: '},
+                'fecnac': {'valor': validarNone(registro.fecnac),
+                          'etiqueta': 'Fecha de Nacimiento: '},
+                'rep_appaterno': {'valor': validarNone(registro.rep_appaterno),
+                                  'etiqueta': 'Apellido Paterno: '},
+                'rep_apmaterno': {'valor': validarNone(registro.rep_apmaterno),
+                                  'etiqueta': 'Apellido Materno: '},
+                'rep_nombre': {'valor': validarNone(registro.rep_nombre),
+                               'etiqueta': 'Nombre: '},
+                'rep_sexo': {'valor': validarNone(sexo2text(registro.rep_sexo)),
+                             'etiqueta': 'Sexo: '},
+                'rep_fecnac': {'valor': validarNone(registro.rep_fecnac),
+                               'etiqueta': 'Fecha de Nacimiento:'},
+                'rep_tel': {'valor': validarNone(registro.rep_tel),
+                            'etiqueta': 'Teléfono: '},
+                'rep_municipio': {'valor': validarNone(registro.rep_municipio),
+                                  'etiqueta': 'Municipio: '},
+                'rep_cvelocal': {'valor': validarNone(registro.rep_cvelocal),
+                                 'etiqueta': 'Localidad: '},
+                'rep_calleynum': {'valor': validarNone(registro.rep_calleynum),
+                                  'etiqueta': 'Calle y número: '},
+                'txtsolmunicipio': {'valor': validarNone(registro.txtsolmunicipio),
+                                    'etiqueta': 'Municipio: '},
+                'txtsollocalidad': {'valor': validarNone(registro.txtsollocalidad),
+                                    'etiqueta': 'Localidad: '},
+                'txtrepmunicipio': {'valor': validarNone(registro.txtrepmunicipio),
+                                    'etiqueta': 'Municpio: '},
+                'txtreplocalidad': {'valor': validarNone(registro.txtreplocalidad),
+                                    'etiqueta': 'Localidad: '},
+                'acomentario': {'valor': validarNone(registro.acomentario),
+                                'etiqueta': 'Comentario: '},
+                'paquete': {'valor': validarNone(registro.paquete),
+                            'etiqueta': 'Paquete: '},
+                'status': {'valor': validarNone(status2txt(registro.status)),
+                           'etiqueta': 'Estatus'},
+                'anio': {'valor': validarNone(anio2txtanio(registro.versionca)),
+                         'etiqueta': 'Versión C.A'},
+            }
+
+    print datos_busq
+
+    userdata = {
+        'usuario': request.user,
+        'datos_busq': datos_busq,
+        'fBuscar': fBuscar
+    }
+
+    return render(request, 'registro.html', userdata)

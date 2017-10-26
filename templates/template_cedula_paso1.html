@@ -1,0 +1,57 @@
+<div class="row">
+
+    <div class="col-sm-12 widget-container-col ui-sortable">
+        <form action="{% url 'urlCedula' paso='2' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+            <div class="widget-box ui-sortable-handle">
+
+                <div class="widget-header">
+                    <h4 class="widget-title"><strong>1. Registro de Interesado</strong>
+                        </strong>
+                    </h4>
+                    <!-- #section:custom/widget-box.toolbar -->
+                    <div class="widget-toolbar">
+                        <button  class="btn btn-info" type="submit" value="">
+                            <i class="ace-icon fa fa-check bigger-110"></i>
+                            Enviar
+                        </button>
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                    <!-- /section:custom/widget-box.toolbar -->
+                </div>
+                <div class="widget-body">
+                {%for campo in regcedula%}
+                    {% if forloop.counter == 1 %}
+                    <div class="col-sm-12">
+                        <h5 class="blue"><strong>Datos Generales del Interesado</strong></h5>
+                    </div>
+                    <div class="row">
+                    {% endif%}
+                    {% if forloop.counter == 8 %}
+                    </div>
+                    <div class="col-sm-12">
+                        <h5 class="blue"><strong>Contacto del Interesado</strong></h5>
+                    </div>
+                    <div class="row">
+                    {% elif forloop.counter == 11 %}
+                    </div>
+                    <div class="col-sm-12">
+                        <h5 class="blue"><strong>Dirección del Interesado</strong></h5>
+                    </div>
+                    <div class="row">
+                    {% endif%}
+                    {% include "wraper.html" %}
+                    <!--{% if forloop.counter|divisibleby:3 %}-->
+                    <!--<div class="clearfix hidden-sm-up"></div>-->
+                    <!--{% endif%}-->
+                {%endfor%}
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
+
+</div>

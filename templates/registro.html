@@ -3,20 +3,17 @@
 {% endblock %}
 {% block sidebar %}
 {% endblock %}
-{% block buscador %}
 
-    <br />
-    <p></p>
+{% block buscador %}
+<br />
     {% include "template_buscador.html" %}
-    <br />
+<br />
 {% endblock%}
 
 {% block content %}
-<br />
-    {% include "template_dashboard.html" %}
-<br />
-<hr />
+    {% include "template_registro.html" %}
 <br />
     {% include "template_crearcedula.html" %}
 <br />
+
 {%endblock%}

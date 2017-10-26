@@ -29,6 +29,6 @@ urlpatterns = [
     url(r'^datosmunicipio', cambiaMunicipio, name='cambiaMunicipio '),
     url(r'^datoslocalidad', cambiaLocalidad, name='cambiaLocalidad '),
     url(r'^cedula', viewCedula, name='urlCedula'),
-    #url(r'^cedula/(?P<paso>[0-9])/$', crearcedula, name='crearcedula'),
-    url(r'^registro/(?P<padron>[0-9])/(?P<folio>[0-9]+)/$', viewRegistro, name='urlregistro'),
+    url(r'^cedula/(?P<paso>[0-9])/$', viewCedula, name='urlCedula'),
+    url(r'^registro/(?P<padron>[0-9])/(?P<folio>[0-9]+)/$', viewRegistro, name='urlRegistro'),
 ]

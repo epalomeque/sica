@@ -16,8 +16,7 @@ FILTROBUSQUEDA = {
 class formBuscar(forms.Form):
     busqueda = forms.CharField(
         label='Busqueda',
-        widget=forms.TextInput(attrs={'placeholder': 'Realiza tu búsqueda por medio del folio de padrón, '\
-                                                     'folio de cédula de atención o nombre del beneficiario'})
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa los datos para la búsqueda'})
     )
 
 
@@ -104,12 +103,19 @@ class datospersonaNoexiste(forms.Form):
         ('M', 'Mujer'),
     )
 
-    nombre = forms.CharField(max_length=150,label='Nombre')
-    primApellido = forms.CharField(max_length=150,label='Apellido Paterno')
-    segApellido = forms.CharField(max_length=150,label='Apellido Materno')
+    nombre = forms.CharField(max_length=150,label='Nombre',
+                             widget=forms.TextInput(attrs={'placeholder': 'Nombre o nombres'}))
+    primApellido = forms.CharField(max_length=150,label='Primer Apellido',
+                                   widget=forms.TextInput(attrs={'placeholder': 'Primer Apellido'})
+                                   )
+    segApellido = forms.CharField(max_length=150,label='Segundo Apellido',
+                                  widget=forms.TextInput(attrs={'placeholder': 'Segundo Apellido'}))
     sexo = forms.ChoiceField(choices=SEXO, label='Sexo',
                              widget=forms.Select(attrs={'required': True}))
-    fecNac = forms.DateField(label='Fec. Nacimiento')
+    fecNac = forms.DateField(label='Fec. Nacimiento',
+                             widget=forms.TextInput(attrs={'placeholder': 'DD/MM/AAAA'})
+                             )
+    edonac = forms.CharField(max_length=30, label='Estado de Nacimiento')
     curp = forms.CharField(max_length=18, label='Curp:')
     telLocal = forms.CharField(max_length=30, label='Tel. Local')
     telCel = forms.CharField(max_length=30, label='Tel. Celular')

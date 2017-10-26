@@ -1,0 +1,117 @@
+<div class="row">
+
+    <div class="col-sm-12 widget-container-col ui-sortable ">
+        <div class="widget-box ui-sortable-handle collapsed">
+
+            <div class="widget-header">
+                <h4 class="widget-title"><strong>1. Datos del Interesado</strong>
+                    </strong>
+                </h4>
+                <!-- #section:custom/widget-box.toolbar -->
+                <div class="widget-toolbar">
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-down"></i>
+                    </a>
+
+                </div>
+                <!-- /section:custom/widget-box.toolbar -->
+            </div>
+            <div class="widget-body">
+
+                <div class="widget-main col-sm-12">
+
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Nombre:<br /><strong style="color:black;">{{ datousuario.idDatos.nombre }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Primer Apellido:<br /><strong style="color:black;">{{ datousuario.idDatos.primApellido }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Segundo Apellido:<br /><strong style="color:black;">{{ datousuario.idDatos.segApellido }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Fecha de Nacimiento:<br /><strong style="color:black;">{{ datousuario.idDatos.fecNac }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Sexo:<br /><strong style="color:black;">{{ datousuario.idDatos.sexo }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Teléfono Local:<br /><strong style="color:black;">{{ datousuario.idContacto.telLocal }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Teléfono Celular.<br /><strong style="color:black;">{{ datousuario.idContacto.telCelular }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Correo Electrónico<br /><strong style="color:black;">{{ datousuario.idContacto.email }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Localidad: <br /><strong style="color:black;">{{ datousuario.iddomicilio.id_localidad }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Vialidad: <br /><strong style="color:black;">{{ datousuario.iddomicilio.vialidad }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Número Exterior:<br /><strong style="color:black;">{{ datousuario.iddomicilio.numExterior }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Número Interior:<br /><strong style="color:black;">{{ datousuario.iddomicilio.numInterior }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Código Postal:<br /><strong style="color:black;">{{ datousuario.iddomicilio.codpost }}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Referencia:<br /><strong style="color:black;">{{ datousuario.iddomicilio.referencia }}</strong></p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 widget-container-col ui-sortable ">
+        <div class="widget-box ui-sortable-handle collapsed">
+
+            <div class="widget-header">
+                <h4 class="widget-title"><strong>2. Datos de la cedula</strong>
+                    </strong>
+                </h4>
+                <!-- #section:custom/widget-box.toolbar -->
+                <div class="widget-toolbar">
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-down"></i>
+                    </a>
+
+                </div>
+                <!-- /section:custom/widget-box.toolbar -->
+            </div>
+            <div class="widget-body">
+
+                <div class="widget-main col-sm-12">
+
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Estatus:<br /><strong style="color:black;">{{cedula.estatus}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Origen:<br /><strong style="color:black;">{{cedula.origen}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Fecha de levantamiento:<br /><strong style="color:black;">{{cedula.fechCreacion}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Fecha de cierre:<br /><strong style="color:black;">{{cedula.fechCierre}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Asunto General:<br /><strong style="color:black;">{{cedula.asgeneral}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Detalle del asunto:<br /><strong style="color:black;">{{cedula.asdetalle}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Respuesta:<br /><strong style="color:black;">{{cedula.respuesta}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Oficio de Respuesta:<br /><strong style="color:black;">{{cedula.Of_respuesta}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Oficio Turnado:<br /><strong style="color:black;">{{cedula.Of_turnado}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Encargado de Seguimiento:<br /><strong style="color:black;">{{cedula.eseguimiento}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Atención:<br /><strong style="color:black;">{{cedula.uatencion}}</strong></p>
+                <p class="col-sm-4 alert alert-warning alertsicamod" style="display: block-inline;">
+                Observaciones:<br /><strong style="color:black;">{{cedula.observacion}}</strong></p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="center">
+        <br/>
+        <a href="#" class="btn btn-success btn-xlg">
+            <i class="ace-icon fa fa-print"></i>
+            <strong>Imprimir Cédula</strong>
+        </a>
+    </div>
+
+</div>

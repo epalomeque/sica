@@ -18,7 +18,9 @@
         <ul>
         {% for registro in resultadoCA %}
             <li>
+                <a href="{% url 'urlRegistro' padron='1' folio=registro.folio %}">
                 {{ registro.folio }}, {{ registro.nombre }} {{ registro.appaterno }} {{ registro.apmaterno }}, {{registro.txtsolmunicipio }}, {{ registro.status }}
+                </a>
             </li>
         {% endfor %}
         </ul>
