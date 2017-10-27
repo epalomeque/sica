@@ -103,6 +103,16 @@ class datospersonaNoexiste(forms.Form):
         ('M', 'Mujer'),
     )
 
+    EDOSNAC = (('AS', 'AGUASCALIENTES'), ('BC', 'BAJA CALIFORNIA'), ('BS', 'BAJA CALIFORNIA SUR'), ('CC', 'CAMPECHE'),
+               ('CL', 'COAHUILA'), ('CM', 'COLIMA'), ('CS', 'CHIAPAS'), ('CH', 'CHIHUAHUA'), ('DF', 'DISTRITO FEDERAL'),
+               ('DG', 'DURANGO'), ('GT', 'GUANAJUATO'), ('GR', 'GUERRERO'), ('HG', 'HIDALGO'), ('JC', 'JALISCO'),
+               ('MC', 'MÉXICO'), ('MN', 'MICHOACÁN'), ('MS', 'MORELOS'), ('NT', 'NAYARIT'), ('NL', 'NUEVO LEÓN'),
+               ('OC', 'OAXACA'), ('PL', 'PUEBLA'), ('QT', 'QUERÉTARO'), ('QR', 'QUINTANA ROO'),
+               ('SP', 'SAN LUIS POTOSÍ'), ('SL', 'SINALOA'), ('SR', 'SONORA'), ('TC', 'TABASCO'), ('TS', 'TAMAULIPAS'),
+               ('TL', 'TLAXCALA'), ('VZ', 'VERACRUZ'), ('YN', 'YUCATÁN'), ('ZS', 'ZACATECAS'),
+               ('NE', 'NACIDO EN EL EXTRANJERO')
+               )
+
     nombre = forms.CharField(max_length=150,label='Nombre',
                              widget=forms.TextInput(attrs={'placeholder': 'Nombre o nombres'}))
     primApellido = forms.CharField(max_length=150,label='Primer Apellido',
@@ -113,13 +123,24 @@ class datospersonaNoexiste(forms.Form):
     sexo = forms.ChoiceField(choices=SEXO, label='Sexo',
                              widget=forms.Select(attrs={'required': True}))
     fecNac = forms.DateField(label='Fec. Nacimiento',
-                             widget=forms.TextInput(attrs={'placeholder': 'DD/MM/AAAA'})
+                             widget=forms.DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': '%d/%m/%y'})
                              )
-    edonac = forms.CharField(max_length=30, label='Estado de Nacimiento')
-    curp = forms.CharField(max_length=18, label='Curp:')
-    telLocal = forms.CharField(max_length=30, label='Tel. Local')
-    telCel = forms.CharField(max_length=30, label='Tel. Celular')
-    email = forms.EmailField(max_length=150,label='Email')
+    edonac = forms.ChoiceField(
+        choices=EDOSNAC, label='Estado de Nacimiento',
+        widget=forms.Select(attrs={'required': True})
+        )
+    curp = forms.CharField(max_length=18, label='CURP:',
+                           widget=forms.TextInput(attrs={'placeholder': 'Clave Única de Registro de Población'})
+                           )
+    telLocal = forms.CharField(max_length=30, label='Teléfono Local',
+                               widget=forms.TextInput(attrs={'placeholder': '(XXX)XXX-XX-XX'})
+                               )
+    telCel = forms.CharField(max_length=30, label='Teléfono Celular',
+                             widget=forms.TextInput(attrs={'placeholder': '(XXX)XXX-XX-XX'})
+                             )
+    email = forms.EmailField(max_length=150,label='Correo Electrónico',
+                             widget=forms.EmailInput(attrs={'placeholder': 'correo@dominio.ext'})
+                             )
     estado = forms.ModelChoiceField (
         queryset = CAT_ESTADO.objects.order_by('idEstado'),
         label = 'Estado',
@@ -141,10 +162,16 @@ class datospersonaNoexiste(forms.Form):
         to_field_name='pk',
         widget=forms.Select(attrs={'id': 'post-Localidad', 'required': True})
     )
-    vialidad = forms.CharField(max_length=50, label='Vialidad:')
-    numExterior = forms.CharField(max_length=8, label='No. Exterior:')
-    numInterior = forms.CharField(max_length=8, label='No. Interior:')
-    codpost = forms.IntegerField(label='Cod. Postal:')
+    vialidad = forms.CharField(max_length=50, label='Vialidad:',
+                               widget=forms.TextInput(attrs={'placeholder': 'Nombre de la calle, andador o camino'})
+                               )
+    numExterior = forms.CharField(max_length=8, label='Número Exterior:',
+                                  widget=forms.TextInput(attrs={'placeholder': 'Número exterior del domicilio'})
+                                  )
+    numInterior = forms.CharField(max_length=8, label='Número Interior:',
+                                  widget=forms.TextInput(attrs={'placeholder': 'Número interior del domicilio'})
+                                  )
+    codpost = forms.IntegerField(label='Código Postal:')
     referencia = forms.CharField(widget=forms.TextInput, label='Referencia:')
     idcatpadron=forms.ModelChoiceField(label='Padron', queryset=CAT_PADRONES.objects.all(),)
 

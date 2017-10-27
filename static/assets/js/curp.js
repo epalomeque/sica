@@ -2,7 +2,7 @@
 (function (global) {
   'use strict';
   /** Edicion Emmanuel Palomeque 25/oct/2017***/
-  /**var comunes = [ 'MARIA', 'MA', 'MA.', 'JOSE', 'J', 'J.' ];**/
+  /**var comunes = [ 'MARIA', 'MA', 'MA.', 'JOSE', 'J', 'J.' ];    DOLR850627HTCRPB04      27/06/1985**/
   var comunes = [ 'MARIA', 'MA', 'MA.', 'J', 'J.' ];
   /**
     curp.js

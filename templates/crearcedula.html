@@ -33,9 +33,6 @@
 
     $('#id_nombre, #id_primApellido, #id_segApellido, #id_sexo, #id_edonac, #id_fecNac').on('change',function(event){
         var fecnac = $('#id_fecNac').val();
-        // console.log('dia -> ', fecnac.substring(0,2));
-        // console.log('mes -> ', fecnac.substring(3,5));
-        //console.log('año -> ', fecnac.substring(6,));
 
         var curp = generaCurp({
           nombre            : $('#id_nombre').val(),
@@ -43,13 +40,8 @@
           apellido_materno  : $('#id_segApellido').val(),
           sexo              : $('#id_sexo').val(),
           estado            : $('#id_edonac').val(),
-          /**fecha_nacimiento  : [fechanac.getDay(), fechanac.getMonth(), fechanac.getFullYear()] **/
-          /** fecha_nacimiento  : [ 24, 12, 1979] **/
           fecha_nacimiento  : [ fecnac.substring(0,2), fecnac.substring(3,5), fecnac.substring(6,) ]
         });
-
-        $('#id_curp').val(curp);
-        console.log(curp);
     });
 
     </script>

@@ -20173,6 +20173,16 @@ h2#titulosistema.header.lighter.naranja {
 #id_busq-busqueda {
     width:100%;
 }
+/*
+#id_sexo, #id_edonac
+*/
+.widget-box select  {
+    height:34px;
+}
+
+.widget-body .row {
+    margin: 0 12px 0 12px;
+}
 
 .widget-box input,
 .widget-box input div,
